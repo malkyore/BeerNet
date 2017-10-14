@@ -10,6 +10,13 @@ namespace BeerNet.Models
     public class recipe
     {
         public ObjectId Id { get; set; }
+        public string idString
+        {
+            get
+            {
+                return Id.ToString();
+            }
+        }
         [BsonElement("name")]
         public string name { get; set; }
         [BsonElement("style")]

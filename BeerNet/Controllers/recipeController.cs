@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
+using MongoDB.Bson;
 
 namespace BeerNet.Controllers
 {
@@ -30,23 +31,45 @@ namespace BeerNet.Controllers
         }
 
         // POST api/values
+        [HttpPost("{id}")]
         [HttpPost]
-        public string Post([FromBody]recipe value)
+        public string Post([FromBody]recipe value, string id)
         {
-            //double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
-            return "Not Implemented";
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+            if (value != null)
+            {
+                DataAccess accessor = new DataAccess();
+                try
+                {
+                    if (id != null)
+                        value.Id = ObjectId.Parse(id);
+                    return accessor.PostRecipe(value).ToString();
+                }
+                catch(Exception e)
+                {
+                    return e.ToString();
+                }
+            }
+            else
+                return "false";
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        public string Delete(string id)
         {
+            DataAccess accessor = new DataAccess();
+            try
+            {
+                if (id != null)
+                    return accessor.deleteRecipe(id);
+                else
+                    return "fail";
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
         }
     }
 }
