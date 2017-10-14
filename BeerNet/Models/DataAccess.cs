@@ -19,7 +19,6 @@ namespace BeerNet.Models
         {
             //mongodb://rest.unacceptable.beer:5283 <- the server IP and stuff
             _client = new MongoClient("mongodb://localhost:27017");
-            //_server = _client.Get
             _db = _client.GetDatabase("BeerNet");
         }
 
@@ -30,12 +29,10 @@ namespace BeerNet.Models
 
         public hop GetHop(string id)
         {
-            //var res = Query<hop>.EQ(p => p.Id, id);
             FilterDefinition<hop> def = "{id: " + id + "}";
             ObjectId hopObjectID = ObjectId.Parse(id);
             hopObjectID.ToString();
             return _db.GetCollection<hop>("hop").Find(j => j.Id == hopObjectID).ToList<hop>()[0];
-            //dsfasdf
         }
 
         public IEnumerable<recipe> GetRecipes()
@@ -45,12 +42,39 @@ namespace BeerNet.Models
 
         public recipe GetRecipe(string id)
         {
-            //var res = Query<hop>.EQ(p => p.Id, id);
             FilterDefinition<recipe> def = "{id: " + id + "}";
             ObjectId recipeObjectID = ObjectId.Parse(id);
             recipeObjectID.ToString();
             return _db.GetCollection<recipe>("recipe").Find(j => j.Id == recipeObjectID).ToList<recipe>()[0];
-            //dsfasdf
+        }
+
+        public string PostRecipe(recipe currentRecipe)
+        {
+            if (currentRecipe.Id == ObjectId.Empty)
+            {
+                _db.GetCollection<recipe>("recipe").InsertOne(currentRecipe);
+                return currentRecipe.Id.ToString();
+            }
+            else
+            {
+                ObjectId recipeObjectID = ObjectId.Parse(currentRecipe.idString);
+                currentRecipe.Id = recipeObjectID;
+                _db.GetCollection<recipe>("recipe").ReplaceOne<recipe>(j => j.Id == recipeObjectID, currentRecipe);
+                return currentRecipe.Id.ToString();
+            }
+        }
+
+        public string deleteRecipe(string id)
+        {
+            try
+            {
+                _db.GetCollection<recipe>("recipe").DeleteOne<recipe>(j => j.Id == ObjectId.Parse(id));
+                return "success";
+            }
+            catch(Exception e)
+            {
+                return e.ToString();
+            }
         }
 
         public Response PostHop(hop h)
