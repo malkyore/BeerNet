@@ -15,8 +15,24 @@ namespace BeerNet.MathFunctions
             double fT = 0;
             double Util = 0;
             double ibu = 0;
-            double IBUBoilTimeCurveFit = -0.04;
-            double IntoFermenterVolume = 5;
+            double IBUBoilTimeCurveFit = 0;
+            double IntoFermenterVolume = 0;
+            try
+            {
+                IBUBoilTimeCurveFit = currentRecipe.recipeParameters.ibuBoilTimeCurveFit;
+            } 
+            catch (Exception e)
+            {
+                IBUBoilTimeCurveFit = -0.04;
+            }
+            try
+            {
+                IntoFermenterVolume = currentRecipe.recipeParameters.intoFermenterVolume;
+            }
+            catch (Exception e)
+            {
+                IntoFermenterVolume = 5;
+            }
             foreach (hopAddition h in value)
             {
                 if (h.type == "Boil")

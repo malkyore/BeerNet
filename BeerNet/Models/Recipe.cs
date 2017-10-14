@@ -25,6 +25,8 @@ namespace BeerNet.Models
         public string description { get; set; }
         [BsonElement("recipeStats")]
         public RecipeStatistics recipeStats { get; set; }
+        [BsonElement("recipeParameters")]
+        public RecipeParameters recipeParameters { get; set; }
         [BsonElement("version")]
         public double version { get; set; }
         [BsonElement("parentRecipe")]

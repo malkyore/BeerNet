@@ -43,10 +43,10 @@ namespace BeerNet.Controllers
                 {
                     if (id != null)
                         value.Id = ObjectId.Parse(id);
-                    RecipeStatistics recipeStat = accessor.PostRecipe(value);
+                    value.recipeStats = MathFunctions.GlobalFunctions.updateStats(value);
+                    bool recipeResponse = accessor.PostRecipe(value);
                     response = new RecipeStatsResponse();
-                    response.recipeStats = recipeStat;
-                    response.recipeStats = MathFunctions.GlobalFunctions.updateStats(value);
+                    response.recipeStats = value.recipeStats;
                     return response;
                 }
                 catch (Exception e)
