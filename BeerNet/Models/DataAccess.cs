@@ -53,5 +53,44 @@ namespace BeerNet.Models
             //dsfasdf
         }
 
+        public Response PostHop(hop h)
+        {
+            Response r = new Response();
+            try
+            {
+                if (h.Id == ObjectId.Empty)
+                {
+                    _db.GetCollection<hop>("hop").InsertOne(h);
+                }
+                else
+                {
+                    _db.GetCollection<hop>("hop").ReplaceOne(j => j.Id == h.Id, h);
+                }
+
+                r.Message = h.Id.ToString();
+            } catch (Exception ex)
+            {
+                r.Fail(ex);
+                
+            }
+
+            return r;
+        }
+
+        public Response DeleteHop(string id)
+        {
+            Response r = new Response();
+            try
+            {
+                _db.GetCollection<hop>("hop").DeleteOne(j => j.Id == ObjectId.Parse(id));
+            } catch (Exception ex)
+            {
+                r.Fail(ex);
+            }
+
+            return r;
+        }
+
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
+using MongoDB.Bson;
 
 namespace BeerNet.Controllers
 {
@@ -29,23 +30,27 @@ namespace BeerNet.Controllers
         }
 
         // POST api/values
+        [HttpPost("{id}")]
         [HttpPost]
-        public string Post([FromBody]recipe value)
+        public IActionResult Post([FromBody]hop value, string id)
         {
             //double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
-            return "Not Implemented";
-        }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+            DataAccess accessor = new DataAccess();
+            if (id != null)
+                value.Id = ObjectId.Parse(id);
+            
+            return Json(accessor.PostHop(value));
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(string id)
         {
+
+            DataAccess accessor = new DataAccess();
+
+            return Json(accessor.DeleteHop(id));
         }
     }
 }
