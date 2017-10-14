@@ -4,23 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
-using BeerNet.MathFunctions;
 
 namespace BeerNet.Controllers
 {
-    [Route("beermath/[controller]")]
-    public class ibuController : Controller
+    [Route("beernet/[controller]")]
+    public class hopController : Controller
     {
-        /*
-         * This controller was for testing and is now largely unnecessary
-         * */
         // GET api/values
         [HttpGet]
         public IActionResult Get()
         {
             DataAccess accessor = new DataAccess();
-            IEnumerable<hop> hopThing = accessor.GetHops();
-            return Json(hopThing.ToList<hop>());
+            IEnumerable<hop> currentRecipe = accessor.GetHops();
+            return Json(currentRecipe.ToList<hop>());
         }
 
         // GET api/values/5
@@ -28,16 +24,16 @@ namespace BeerNet.Controllers
         public IActionResult Get(string id)
         {
             DataAccess accessor = new DataAccess();
-            recipe hopThing = accessor.GetRecipe(id);
-            return Json(hopThing);
+            hop currentRecipe = accessor.GetHop(id);
+            return Json(currentRecipe);
         }
 
         // POST api/values
         [HttpPost]
-        public double Post([FromBody]List<hopAddition> value)
+        public string Post([FromBody]recipe value)
         {
-            double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
-            return ibu;
+            //double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
+            return "Not Implemented";
         }
 
         // PUT api/values/5

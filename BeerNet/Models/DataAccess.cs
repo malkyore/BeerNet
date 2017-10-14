@@ -27,33 +27,30 @@ namespace BeerNet.Models
             return _db.GetCollection<hop>("hop").Find(_ => true).ToList();
         }
 
+        public hop GetHop(string id)
+        {
+            //var res = Query<hop>.EQ(p => p.Id, id);
+            FilterDefinition<hop> def = "{id: " + id + "}";
+            ObjectId hopObjectID = ObjectId.Parse(id);
+            hopObjectID.ToString();
+            return _db.GetCollection<hop>("hop").Find(j => j.Id == hopObjectID).ToList<hop>()[0];
+            //dsfasdf
+        }
 
-        public recipe GetHop(string id)
+        public IEnumerable<recipe> GetRecipes()
+        {
+            return _db.GetCollection<recipe>("recipe").Find(_ => true).ToList();
+        }
+
+        public recipe GetRecipe(string id)
         {
             //var res = Query<hop>.EQ(p => p.Id, id);
             FilterDefinition<recipe> def = "{id: " + id + "}";
-            ObjectId jsdfjfdjf = ObjectId.Parse(id);
-            jsdfjfdjf.ToString();
-            return _db.GetCollection<recipe>("recipe").Find(j => j.Id == jsdfjfdjf).ToList<recipe>()[0];
+            ObjectId recipeObjectID = ObjectId.Parse(id);
+            recipeObjectID.ToString();
+            return _db.GetCollection<recipe>("recipe").Find(j => j.Id == recipeObjectID).ToList<recipe>()[0];
+            //dsfasdf
         }
 
-        //public Product Create(Product p)
-        //{
-        //    _db.GetCollection<Product>("Products").Save(p);
-        //    return p;
-        //}
-        //
-        //public void Update(ObjectId id, Product p)
-        //{
-        //    p.Id = id;
-        //    var res = Query<Product>.EQ(pd => pd.Id, id);
-        //    var operation = Update<Product>.Replace(p);
-        //    _db.GetCollection<Product>("Products").Update(res, operation);
-        //}
-        //public void Remove(ObjectId id)
-        //{
-        //    var res = Query<Product>.EQ(e => e.Id, id);
-        //    var operation = _db.GetCollection<Product>("Products").Remove(res);
-        //}
     }
 }

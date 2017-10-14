@@ -35,15 +35,13 @@ namespace BeerNet.Models
         [BsonElement("hidden")]
         public string hidden { get; set; }
         [BsonElement("hops")]
-        public List<hop> hops { get; set; }
-        //[BsonElement("fermentables")]
-        //public List<fermentable> fermentables { get; set; }
-        //[BsonElement("yeasts")]
-        //public List<yeast> yeasts { get; set; }
-        //[BsonElement("adjuncts")]
-        //public List<adjunct> adjuncts { get; set; }
-        [BsonElement("test")]
-        public string test { get; set; }
+        public List<hopAddition> hops { get; set; }
+        [BsonElement("fermentables")]
+        public List<fermentableAddition> fermentables { get; set; }
+        [BsonElement("yeasts")]
+        public List<yeast> yeasts { get; set; }
+        [BsonElement("adjuncts")]
+        public List<adjunctAddition> adjuncts { get; set; }
         [BsonElement("styleID")]
         public string styleID { get; set; }
         
