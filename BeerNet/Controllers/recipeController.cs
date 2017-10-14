@@ -33,8 +33,9 @@ namespace BeerNet.Controllers
         // POST api/values
         [HttpPost("{id}")]
         [HttpPost]
-        public string Post([FromBody]recipe value, string id)
+        public RecipeStatsResponse Post([FromBody]recipe value, string id)
         {
+            RecipeStatsResponse response = new RecipeStatsResponse();
             if (value != null)
             {
                 DataAccess accessor = new DataAccess();
@@ -42,15 +43,23 @@ namespace BeerNet.Controllers
                 {
                     if (id != null)
                         value.Id = ObjectId.Parse(id);
-                    return accessor.PostRecipe(value).ToString();
+                    RecipeStatistics recipeStat = accessor.PostRecipe(value);
+                    response = new RecipeStatsResponse();
+                    response.recipeStats = recipeStat;
+                    response.recipeStats = MathFunctions.GlobalFunctions.updateStats(value);
+                    return response;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    return e.ToString();
+                    response.Fail(e);
+                    return response;
                 }
             }
             else
-                return "false";
+            {
+                response.RecipeNullFailure();
+                return response;
+            }
         }
 
         // DELETE api/values/5

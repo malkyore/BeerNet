@@ -48,19 +48,19 @@ namespace BeerNet.Models
             return _db.GetCollection<recipe>("recipe").Find(j => j.Id == recipeObjectID).ToList<recipe>()[0];
         }
 
-        public string PostRecipe(recipe currentRecipe)
+        public RecipeStatistics PostRecipe(recipe currentRecipe)
         {
             if (currentRecipe.Id == ObjectId.Empty)
             {
                 _db.GetCollection<recipe>("recipe").InsertOne(currentRecipe);
-                return currentRecipe.Id.ToString();
+                return currentRecipe.recipeStats;
             }
             else
             {
                 ObjectId recipeObjectID = ObjectId.Parse(currentRecipe.idString);
                 currentRecipe.Id = recipeObjectID;
                 _db.GetCollection<recipe>("recipe").ReplaceOne<recipe>(j => j.Id == recipeObjectID, currentRecipe);
-                return currentRecipe.Id.ToString();
+                return currentRecipe.recipeStats;
             }
         }
 

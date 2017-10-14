@@ -23,16 +23,8 @@ namespace BeerNet.Models
         public string style { get; set; }
         [BsonElement("description")]
         public string description { get; set; }
-        [BsonElement("abv")]
-        public double abv { get; set; }
-        [BsonElement("ibu")]
-        public double ibu { get; set; }
-        [BsonElement("fg")]
-        public double fg { get; set; }
-        [BsonElement("og")]
-        public double og { get; set; }
-        [BsonElement("srm")]
-        public double srm { get; set; }
+        [BsonElement("recipeStats")]
+        public RecipeStatistics recipeStats { get; set; }
         [BsonElement("version")]
         public double version { get; set; }
         [BsonElement("parentRecipe")]

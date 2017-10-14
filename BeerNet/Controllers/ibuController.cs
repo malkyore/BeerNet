@@ -36,7 +36,7 @@ namespace BeerNet.Controllers
         [HttpPost]
         public double Post([FromBody]List<hopAddition> value)
         {
-            double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
+            double ibu = 65;//MathFunctions.IBU.basicIBU(value, 1.07);
             return ibu;
         }
 

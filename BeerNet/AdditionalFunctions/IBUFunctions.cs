@@ -8,8 +8,9 @@ namespace BeerNet.MathFunctions
 {
     public static class IBU
     {
-        public static double basicIBU(List<hopAddition> value, double og)
+        public static double basicIBU(recipe currentRecipe)
         {
+            List<hopAddition> value = currentRecipe.hops;
             double fG = 0;
             double fT = 0;
             double Util = 0;
@@ -20,7 +21,7 @@ namespace BeerNet.MathFunctions
             {
                 if (h.type == "Boil")
                 {
-                    fG = (1.65 * (Math.Pow(0.000125, (og - 1))));
+                    fG = (1.65 * (Math.Pow(0.000125, (currentRecipe.recipeStats.og - 1))));
                     fT = ((1 - Math.Pow(Math.E, IBUBoilTimeCurveFit * h.time)) / 4.15);
                     Util = fG * fT;
                     ibu += (((h.amount * h.hop.aau) * Util * 74.89) / IntoFermenterVolume);
