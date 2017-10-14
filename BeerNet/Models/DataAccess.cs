@@ -17,6 +17,7 @@ namespace BeerNet.Models
 
         public DataAccess()
         {
+            //mongodb://rest.unacceptable.beer:5283 <- the server IP and stuff
             _client = new MongoClient("mongodb://localhost:27017");
             //_server = _client.Get
             _db = _client.GetDatabase("BeerNet");
