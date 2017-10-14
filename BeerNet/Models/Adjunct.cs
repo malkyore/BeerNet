@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 
 namespace BeerNet.Models
 {
-    public class adjunct
+    public class adjunct : AdjunctBase
     {
-        //public ObjectId Id { get; set; }
-        //public string idString
-        //  {
-        //      get
-        //      {
-        //          return Id.ToString();
-        //      }
-        //  }
-        [BsonElement("idString")]
-        public string idString { get; set; }
-        [BsonElement("name")]
-        public string name { get; set; }
+        public ObjectId Id { get; set; }
+        public string idString
+          {
+              get
+              {
+                  return Id.ToString();
+              }
+          }
+
     }
 }
