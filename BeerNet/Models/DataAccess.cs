@@ -19,85 +19,75 @@ namespace BeerNet.Models
             _db = _client.GetDatabase("BeerNet");
         }
 
-        internal IEnumerable<yeast> GetYeasts()
+        public IEnumerable<T> GetAll<T>()
         {
-            return _db.GetCollection<yeast>("yeast").Find(_ => true).ToList();
+            return _db.GetCollection<T>(typeof(T).Name).Find(_ => true).ToList();
         }
 
-        public IEnumerable<hop> GetHops()
+        public T Get<T>(string id)
         {
-            return _db.GetCollection<hop>("hop").Find(_ => true).ToList();
-        }
-
-        internal yeast GetYeast(string id)
-        {
-            FilterDefinition<hop> def = "{id: " + id + "}";
-            ObjectId yeastObjectID = ObjectId.Parse(id);
-            yeastObjectID.ToString();
-            List<yeast> result = _db.GetCollection<yeast>("yeast").Find(j => j.Id == yeastObjectID).ToList<yeast>();
+            FilterDefinition<T> def = "{_id: \"" + id + "\"}";
+            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+            string collection = typeof(T).Name;
+            List<T> result = _db.GetCollection<T>(collection).Find(filter).ToList<T>();
             if (result.Count > 0)
                 return result[0];
-            return null;
+
+            return default(T);
         }
 
-        internal IEnumerable<fermentable> Getfermentables()
+        public Response Post<T>(T document)
         {
-            return _db.GetCollection<fermentable>("fermentable").Find(_ => true).ToList();
+            Response r = new Response();
+            try
+            {
+                
+                var idProperty = typeof(T).GetProperty("Id");
+                ObjectId value = (ObjectId)idProperty.GetValue(document);
+                if (value == ObjectId.Empty)
+                {
+                    _db.GetCollection<T>(typeof(T).Name).InsertOne(document);
+                }
+                else
+                {
+                    var filter = Builders<T>.Filter.Eq("_id", value);
+
+                    _db.GetCollection<T>(typeof(T).Name).ReplaceOne(filter, document);
+                }
+
+                ObjectId oid = (ObjectId)idProperty.GetValue(document);
+                r.Message = oid.ToString();
+            }
+            catch (Exception ex)
+            {
+                r.Fail(ex);
+
+            }
+
+            return r;
         }
 
-        internal fermentable Getfermentable(string id)
+        public Response Delete<T>(string id)
         {
-            FilterDefinition<hop> def = "{id: " + id + "}";
-            ObjectId fermentableObjectID = ObjectId.Parse(id);
-            fermentableObjectID.ToString();
-            List<fermentable> result = _db.GetCollection<fermentable>("fermentable").Find(j => j.Id == fermentableObjectID).ToList<fermentable>();
-            if (result.Count > 0)
-                return result[0];
-            return null;
-        }
+            Response r = new Response();
+            try
+            {
+                var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+                _db.GetCollection<T>(typeof(T).Name).DeleteOne(filter);
+            }
+            catch (Exception ex)
+            {
+                r.Fail(ex);
+            }
 
-        internal IEnumerable<adjunct> Getadjuncts()
-        {
-            return _db.GetCollection<adjunct>("adjunct").Find(_ => true).ToList();
-        }
-
-        internal adjunct Getadjunct(string id)
-        {
-            FilterDefinition<hop> def = "{id: " + id + "}";
-            ObjectId adjunctObjectID = ObjectId.Parse(id);
-            adjunctObjectID.ToString();
-            List<adjunct> result = _db.GetCollection<adjunct>("adjunct").Find(j => j.Id == adjunctObjectID).ToList<adjunct>();
-            if (result.Count > 0)
-                return result[0];
-            return null;
-        }
-
-        public hop GetHop(string id)
-        {
-            FilterDefinition<hop> def = "{id: " + id + "}";
-            ObjectId hopObjectID = ObjectId.Parse(id);
-            hopObjectID.ToString();
-            List<hop> result = _db.GetCollection<hop>("hop").Find(j => j.Id == hopObjectID).ToList<hop>();
-            if (result.Count > 0)
-                return result[0];
-            return null;
-        }
-        
-        public IEnumerable<recipe> GetRecipes()
-        {
-            return _db.GetCollection<recipe>("recipe").Find(_ => true).ToList();
-        }
-
-        public recipe GetRecipe(string id)
-        {
-            FilterDefinition<recipe> def = "{id: " + id + "}";
-            ObjectId recipeObjectID = ObjectId.Parse(id);
-            recipeObjectID.ToString();
-            return _db.GetCollection<recipe>("recipe").Find(j => j.Id == recipeObjectID).ToList<recipe>()[0];
+            return r;
         }
 
         public RecipeStatistics PostRecipe(recipe currentRecipe)
         {
+            //Maybe one day...
+            //Post(currentRecipe);
+
             if (currentRecipe.Id == ObjectId.Empty)
             {
                 _db.GetCollection<recipe>("recipe").InsertOne(currentRecipe);
@@ -111,178 +101,5 @@ namespace BeerNet.Models
                 return currentRecipe.recipeStats;
             }
         }
-
-        public string deleteRecipe(string id)
-        {
-            try
-            {
-                _db.GetCollection<recipe>("recipe").DeleteOne<recipe>(j => j.Id == ObjectId.Parse(id));
-                return "success";
-            }
-            catch(Exception e)
-            {
-                return e.ToString();
-            }
-        }
-
-        public Response PostHop(hop h)
-        {
-            Response r = new Response();
-            try
-            {
-                if (h.Id == ObjectId.Empty)
-                {
-                    _db.GetCollection<hop>("hop").InsertOne(h);
-                }
-                else
-                {
-                    _db.GetCollection<hop>("hop").ReplaceOne(j => j.Id == h.Id, h);
-                }
-
-                r.Message = h.Id.ToString();
-            } catch (Exception ex)
-            {
-                r.Fail(ex);
-                
-            }
-
-            return r;
-        }
-
-        internal object PostYeast(yeast value)
-        {
-            Response r = new Response();
-            try
-            {
-                if (value.Id == ObjectId.Empty)
-                {
-                    _db.GetCollection<yeast>("yeast").InsertOne(value);
-                }
-                else
-                {
-                    _db.GetCollection<yeast>("yeast").ReplaceOne(j => j.Id == value.Id, value);
-                }
-
-                r.Message = value.Id.ToString();
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-
-            }
-
-            return r;
-        }
-
-        public Response DeleteHop(string id)
-        {
-            Response r = new Response();
-            try
-            {
-                _db.GetCollection<hop>("hop").DeleteOne(j => j.Id == ObjectId.Parse(id));
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-            }
-
-            return r;
-        }
-
-        public Response DeleteYeast(string id)
-        {
-            Response r = new Response();
-            try
-            {
-                _db.GetCollection<yeast>("yeast").DeleteOne(j => j.Id == ObjectId.Parse(id));
-            } catch (Exception ex)
-            {
-                r.Fail(ex);
-            }
-
-            return r;
-        }
-
-        internal object Postfermentable(fermentable value)
-        {
-            Response r = new Response();
-            try
-            {
-                if (value.Id == ObjectId.Empty)
-                {
-                    _db.GetCollection<fermentable>("fermentable").InsertOne(value);
-                }
-                else
-                {
-                    _db.GetCollection<fermentable>("fermentable").ReplaceOne(j => j.Id == value.Id, value);
-                }
-
-                r.Message = value.Id.ToString();
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-
-            }
-
-            return r;
-        }
-
-        public Response Deletefermentable(string id)
-        {
-            Response r = new Response();
-            try
-            {
-                _db.GetCollection<fermentable>("fermentable").DeleteOne(j => j.Id == ObjectId.Parse(id));
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-            }
-
-            return r;
-        }
-
-        internal object Postadjunct(adjunct value)
-        {
-            Response r = new Response();
-            try
-            {
-                if (value.Id == ObjectId.Empty)
-                {
-                    _db.GetCollection<adjunct>("adjunct").InsertOne(value);
-                }
-                else
-                {
-                    _db.GetCollection<adjunct>("adjunct").ReplaceOne(j => j.Id == value.Id, value);
-                }
-
-                r.Message = value.Id.ToString();
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-
-            }
-
-            return r;
-        }
-
-        public Response Deleteadjunct(string id)
-        {
-            Response r = new Response();
-            try
-            {
-                _db.GetCollection<adjunct>("adjunct").DeleteOne(j => j.Id == ObjectId.Parse(id));
-            }
-            catch (Exception ex)
-            {
-                r.Fail(ex);
-            }
-
-            return r;
-        }
-
-
     }
 }

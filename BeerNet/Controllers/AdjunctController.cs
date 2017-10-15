@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
 using MongoDB.Bson;
+using BeerNet.MathFunctions;
 
 namespace BeerNet.Controllers
 {
@@ -18,8 +19,8 @@ namespace BeerNet.Controllers
         public IActionResult Get()
         {
             DataAccess accessor = new DataAccess();
-            IEnumerable<adjunct> currentRecipe = accessor.Getadjuncts();
-            return Json(currentRecipe.ToList<adjunct>());
+            IEnumerable<adjunct> currentRecipe = accessor.GetAll<adjunct>();
+            return Json(currentRecipe.ToList());
         }
 
         // GET api/values/5
@@ -27,7 +28,7 @@ namespace BeerNet.Controllers
         public IActionResult Get(string id)
         {
             DataAccess accessor = new DataAccess();
-            adjunct currentRecipe = accessor.Getadjunct(id);
+            adjunct currentRecipe = accessor.Get<adjunct>(id);
             return Json(currentRecipe);
         }
 
@@ -39,10 +40,9 @@ namespace BeerNet.Controllers
             //double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
 
             DataAccess accessor = new DataAccess();
-            if (id != null)
-                value.Id = ObjectId.Parse(id);
+            value = GlobalFunctions.AddIdIfNeeded(value, id);
 
-            return Json(accessor.Postadjunct(value));
+            return Json(accessor.Post(value));
         }
 
         // DELETE api/values/5
@@ -52,7 +52,7 @@ namespace BeerNet.Controllers
 
             DataAccess accessor = new DataAccess();
 
-            return Json(accessor.Deleteadjunct(id));
+            return Json(accessor.Delete<adjunct>(id));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BeerNet.Controllers
         public IActionResult Get()
         {
             DataAccess accessor = new DataAccess();
-            IEnumerable<hop> hopThing = accessor.GetHops();
+            IEnumerable<hop> hopThing = accessor.GetAll<hop>();
             return Json(hopThing.ToList<hop>());
         }
 
@@ -28,7 +28,7 @@ namespace BeerNet.Controllers
         public IActionResult Get(string id)
         {
             DataAccess accessor = new DataAccess();
-            recipe hopThing = accessor.GetRecipe(id);
+            recipe hopThing = accessor.Get<recipe>(id);
             return Json(hopThing);
         }
 

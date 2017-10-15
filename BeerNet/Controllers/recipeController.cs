@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
 using MongoDB.Bson;
+using BeerNet.MathFunctions;
 
 namespace BeerNet.Controllers
 {
@@ -17,8 +18,8 @@ namespace BeerNet.Controllers
         public IActionResult Get()
         {
             DataAccess accessor = new DataAccess();
-            IEnumerable<recipe> currentRecipe = accessor.GetRecipes();
-            return Json(currentRecipe.ToList<recipe>());
+            IEnumerable<recipe> currentRecipe = accessor.GetAll<recipe>();
+            return Json(currentRecipe.ToList());
         }
 
         // GET api/values/5
@@ -26,7 +27,7 @@ namespace BeerNet.Controllers
         public IActionResult Get(string id)
         {
             DataAccess accessor = new DataAccess();
-            recipe currentRecipe = accessor.GetRecipe(id);
+            recipe currentRecipe = accessor.Get<recipe>(id);
             return Json(currentRecipe);
         }
 
@@ -41,8 +42,8 @@ namespace BeerNet.Controllers
                 DataAccess accessor = new DataAccess();
                 try
                 {
-                    if (id != null)
-                        value.Id = ObjectId.Parse(id);
+
+                    value = GlobalFunctions.AddIdIfNeeded(value, id);
                     RecipeStatistics recipeStat = accessor.PostRecipe(value);
                     response = new RecipeStatsResponse();
                     response.recipeStats = recipeStat;
@@ -65,20 +66,10 @@ namespace BeerNet.Controllers
         // DELETE api/values/5
         [HttpDelete("{id}")]
         [HttpDelete]
-        public string Delete(string id)
+        public IActionResult Delete(string id)
         {
             DataAccess accessor = new DataAccess();
-            try
-            {
-                if (id != null)
-                    return accessor.deleteRecipe(id);
-                else
-                    return "fail";
-            }
-            catch (Exception e)
-            {
-                return e.ToString();
-            }
+            return Json(accessor.Delete<recipe>(id));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BeerNet.Models
     public class adjunct : AdjunctBase
     {
         public ObjectId Id { get; set; }
-        public string idString
+        public new string idString
           {
               get
               {

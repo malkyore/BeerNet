@@ -1,4 +1,5 @@
 ﻿using BeerNet.Models;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,18 @@ namespace BeerNet.MathFunctions
             currentRecipe.recipeStats.ibu = IBU.basicIBU(currentRecipe);
 
             return currentRecipe.recipeStats;
+        }
+
+        public static T AddIdIfNeeded<T>(T document, string id)
+        {
+            if (id != null)
+            {
+                var idProperty = typeof(T).GetProperty("Id");
+                ObjectId value = (ObjectId)idProperty.GetValue(document);
+                idProperty.SetValue(document, ObjectId.Parse(id));
+            }
+
+            return document;
         }
     }
 }

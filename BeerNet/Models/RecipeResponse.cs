@@ -8,9 +8,6 @@ namespace BeerNet
 {
     public class RecipeStatsResponse : Response
     {
-
-        public bool Success;
-        public string Message;
         public RecipeStatistics recipeStats;
 
         public RecipeStatsResponse()
