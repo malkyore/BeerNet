@@ -83,7 +83,7 @@ namespace BeerNet.Models
             return r;
         }
 
-        public RecipeStatistics PostRecipe(recipe currentRecipe)
+        public bool PostRecipe(recipe currentRecipe)
         {
             //Maybe one day...
             //Post(currentRecipe);
@@ -91,14 +91,14 @@ namespace BeerNet.Models
             if (currentRecipe.Id == ObjectId.Empty)
             {
                 _db.GetCollection<recipe>("recipe").InsertOne(currentRecipe);
-                return currentRecipe.recipeStats;
+                return true;
             }
             else
             {
                 ObjectId recipeObjectID = ObjectId.Parse(currentRecipe.idString);
                 currentRecipe.Id = recipeObjectID;
                 _db.GetCollection<recipe>("recipe").ReplaceOne<recipe>(j => j.Id == recipeObjectID, currentRecipe);
-                return currentRecipe.recipeStats;
+                return ytue;
             }
         }
     }
