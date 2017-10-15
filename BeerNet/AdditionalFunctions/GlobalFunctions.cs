@@ -11,11 +11,11 @@ namespace BeerNet.MathFunctions
     {
         public static RecipeStatistics updateStats(recipe currentRecipe)
         {
-            //Add OG Calc here
-            //Add SRM Calc here
-            //Add ABV Calc here
+            currentRecipe.recipeStats.og = ABVFunctions.basicOG(currentRecipe);
+            currentRecipe.recipeStats.fg = ABVFunctions.basicFG(currentRecipe);
+            currentRecipe.recipeStats.srm = ABVFunctions.basicSRM(currentRecipe);
+            currentRecipe.recipeStats.abv = ABVFunctions.basicABV(currentRecipe);
             currentRecipe.recipeStats.ibu = IBU.basicIBU(currentRecipe);
-
             return currentRecipe.recipeStats;
         }
 
