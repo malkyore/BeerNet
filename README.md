@@ -1,7 +1,7 @@
 # BeerNet
 This is the web API
 
-It supports GET/POST/DELETE, but not PUT because we don't know why you'd want that.
+It supports GET POST and DELETE for recipes, hops, fermentables, yeasts, and adjuncts.
 
 To insert an object, use the following URL:
 localhost:666/beernet/hop
