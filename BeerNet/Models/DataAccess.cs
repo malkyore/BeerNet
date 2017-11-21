@@ -26,13 +26,19 @@ namespace BeerNet.Models
 
         public T Get<T>(string id)
         {
-            FilterDefinition<T> def = "{_id: \"" + id + "\"}";
-            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
-            string collection = typeof(T).Name;
-            List<T> result = _db.GetCollection<T>(collection).Find(filter).ToList<T>();
-            if (result.Count > 0)
-                return result[0];
-
+            try
+            {
+                FilterDefinition<T> def = "{_id: \"" + id + "\"}";
+                var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+                string collection = typeof(T).Name;
+                List<T> result = _db.GetCollection<T>(collection).Find(filter).ToList<T>();
+                if (result.Count > 0)
+                    return result[0];
+            }
+            catch (Exception e)
+            {
+                
+            }
             return default(T);
         }
 
@@ -98,7 +104,7 @@ namespace BeerNet.Models
                 ObjectId recipeObjectID = ObjectId.Parse(currentRecipe.idString);
                 currentRecipe.Id = recipeObjectID;
                 _db.GetCollection<recipe>("recipe").ReplaceOne<recipe>(j => j.Id == recipeObjectID, currentRecipe);
-                return ytue;
+                return true;
             }
         }
     }

@@ -10,6 +10,8 @@ namespace BeerNet
     {
         public RecipeStatistics recipeStats;
 
+        public string idString;
+
         public RecipeStatsResponse()
         {
             Success = true;

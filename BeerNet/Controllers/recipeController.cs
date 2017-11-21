@@ -48,6 +48,7 @@ namespace BeerNet.Controllers
                     bool recipeResponse = accessor.PostRecipe(value);
                     response = new RecipeStatsResponse();
                     response.recipeStats = value.recipeStats;
+                    response.idString = value.idString;
                     return response;
                 }
                 catch (Exception e)
