@@ -1,0 +1,33 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace BeerNet.Modles
+{
+  public class PurchaseOrderLine
+  {
+    public ObjectId { get;set; }
+    public string idString
+    {
+      get
+      {
+        return Id.ToString();
+      }
+    }
+    [BsonElement("PurchaseOrderID")]
+    public string PurchaseOrderID { get;set; }
+    [BsonElement("ItemID")]
+    public string ItemID { get;set; }
+    [BsonElement("Source")]
+    public string Source { get;set; }
+    [BsonElement("Qty")]
+    public string Qty { get;set; }
+    [BsonElement("UM")]
+    public string UM { get;set; }
+    [BsonElement("Amount")]
+    public string Amount { get;set; }
+  }
+}
