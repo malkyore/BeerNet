@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using BeerNet.Models;
 using MongoDB.Bson;
 using BeerNet.MathFunctions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeerNet.Controllers
 {
@@ -16,6 +17,7 @@ namespace BeerNet.Controllers
     {
         // GET api/values
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             DataAccess accessor = new DataAccess();
@@ -25,6 +27,7 @@ namespace BeerNet.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get(string id)
         {
             DataAccess accessor = new DataAccess();
@@ -35,6 +38,7 @@ namespace BeerNet.Controllers
         // POST api/values
         [HttpPost("{id}")]
         [HttpPost]
+        [Authorize]
         public IActionResult Post([FromBody]style value, string id)
         {
             //double ibu = MathFunctions.IBU.basicIBU(value, 1.07);
@@ -47,6 +51,7 @@ namespace BeerNet.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete(string id)
         {
 
