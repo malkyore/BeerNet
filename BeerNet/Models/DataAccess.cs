@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace BeerNet.Models
 {
@@ -11,11 +13,17 @@ namespace BeerNet.Models
         MongoClient _client;
         //MongoServer _server;
         IMongoDatabase _db;
+        private IConfiguration _configuration;
 
         public DataAccess()
         {
+            var builder = new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json");
+            _configuration = builder.Build();
             //mongodb://rest.unacceptable.beer:5283 <- the server IP and stuff
-            _client = new MongoClient("mongodb://localhost:27017");
+            _client = new MongoClient(_configuration.GetValue<string>("MongoLocation"));
+            //_client = new MongoClient("mongodb://rest.unacceptable.beser:5283");
             _db = _client.GetDatabase("BeerNet");
         }
 

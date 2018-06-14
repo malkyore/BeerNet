@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IO;
 
 namespace BeerNet
 {
@@ -22,7 +23,10 @@ namespace BeerNet
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -30,12 +34,13 @@ namespace BeerNet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-          //  services.AddHttpsRedirection(options =>
-          //  {
-          //      options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
-          //      options.HttpsPort = 5123;
-          //  });
-            services.AddMongoIdentityProvider<ApplicationUser, ApplicationRole>("mongodb://localhost:27017/BeerNet", options =>
+            //  services.AddHttpsRedirection(options =>
+            //  {
+            //      options.RedirectStatusCode = StatusCodes.Status301MovedPermanently;
+            //      options.HttpsPort = 5123;
+            //  });
+            string butt = Configuration.GetSection("JwtKey").Value;
+            services.AddMongoIdentityProvider<ApplicationUser, ApplicationRole>(Configuration.GetValue<string>("MongoLocation"), options =>
             {
                 options.Password.RequiredLength = 6;
 

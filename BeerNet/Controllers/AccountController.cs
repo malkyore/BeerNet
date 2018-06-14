@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity.MongoDB;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using BeerNet.Identity;
@@ -12,8 +10,8 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace BeerNet.Controllers
 {
@@ -33,7 +31,10 @@ namespace BeerNet.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _configuration = configuration;
+            var builder = new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json");
+            _configuration = builder.Build();
         }
 
         [AllowAnonymous]
@@ -42,7 +43,6 @@ namespace BeerNet.Controllers
         public IActionResult Login([FromBody] LoginViewModel model)
         {
             var result =  _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-
             if (result.Result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
@@ -86,13 +86,13 @@ namespace BeerNet.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ButtsAndAllOfTheCoolFunTimesAAAFHHFDHSFJJ"));//_configuration["JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JwtKey")));//_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(30));//_configuration["JwtExpireDays"]));
+            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration.GetValue<string>("JwtExpireDays")));//_configuration["JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
-                "http://unacceptable.beer",//_configuration["JwtIssuer"],
-                "http://unacceptable.beer",     //_configuration["JwtIssuer"],
+                _configuration.GetValue<string>("JwtIssuer"),//_configuration["JwtIssuer"],
+                _configuration.GetValue<string>("JwtIssuer"),     //_configuration["JwtIssuer"],
                 claims,
                 expires: expires,
                 signingCredentials: creds
