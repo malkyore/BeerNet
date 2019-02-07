@@ -53,7 +53,9 @@ namespace BeerNet.Controllers
                 }
             }
 
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            this.HttpContext.Response.StatusCode = 401;
+            return Json("Invalid Login Attempt");
+            //throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
         }
 
         [AllowAnonymous]
