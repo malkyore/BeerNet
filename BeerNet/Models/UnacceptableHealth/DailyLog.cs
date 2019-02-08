@@ -18,24 +18,29 @@ namespace BeerNet.Models.UnacceptableHealth
             }
         }
 
-
+        [BsonElement("name")]
+        public string name { get; set; }
         [BsonElement("date")]
         public DateTime date { get; set; }
-        [BsonElement("usedflonase")]
-        public bool usedFlonase { get; set; }
-        [BsonElement("flonasereasoning")]
-        public int flonaseReasoning { get; set; }
-        [BsonElement("hadheadache")]
-        public Boolean hadHeadache { get; set; }
-        [BsonElement("workday")]
-        public bool workDay { get; set; }
-        [BsonElement("workrating")]
-        public int workRating { get; set; }
-        [BsonElement("personaldayrating")]
-        public int personalDayRating { get; set; }
-        [BsonElement("mindfulmoment")]
-        public string mindfulMoment { get; set; }
-        [BsonElement("overalnotes")]
-        public string overalNotes { get; set; }
+        [BsonElement("HealthRating")]
+        public int HealthRating { get; set; }
+        [BsonElement("BBD")]
+        public bool BBD { get; set; }
+        [BsonElement("UsedFlonase")]
+        public bool UsedFlonase { get; set; }
+        [BsonElement("FlonaseReasoning")]
+        public int FlonaseReasoning { get; set; }
+        [BsonElement("HadHeadache")]
+        public Boolean HadHeadache { get; set; }
+        [BsonElement("WorkDay")]
+        public bool WorkDay { get; set; }
+        [BsonElement("WorkRating")]
+        public int WorkRating { get; set; }
+        [BsonElement("PersonalDayRating")]
+        public int PersonalDayRating { get; set; }
+        [BsonElement("MindfulMoment")]
+        public string MindfulMoment { get; set; }
+        [BsonElement("OverallNotes")]
+        public string OverallNotes { get; set; }
     }
 }
