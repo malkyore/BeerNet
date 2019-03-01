@@ -10,10 +10,10 @@ namespace BeerNet.Models
 {
     public class DataAccess
     {
-        MongoClient _client;
+        protected MongoClient _client;
         //MongoServer _server;
-        IMongoDatabase _db;
-        private IConfiguration _configuration;
+        protected IMongoDatabase _db;
+        protected IConfiguration _configuration;
 
         public DataAccess()
         {

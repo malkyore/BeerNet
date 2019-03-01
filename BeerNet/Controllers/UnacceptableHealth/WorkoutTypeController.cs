@@ -10,62 +10,44 @@ namespace BeerNet.Controllers.UnacceptableHealth
 {
     [Route("health/[controller]")]
     [ApiController]
-    public class DailyLogController : Controller
+    public class WorkoutTypeController : Controller
     {
         HealthDataAccess accessor = new HealthDataAccess();
-        // GET: api/DailyLog
+
+        // GET: api/WorkoutType
         [HttpGet]
         [Authorize]
         public IActionResult Get()
         {
-            IEnumerable<DailyLog> currentRecipe = accessor.GetAllDailyLogsSorted();
-                //accessor.GetAll<DailyLog>();
-            return Json(currentRecipe.ToList());
+            IEnumerable<WorkoutType> workoutTypes = accessor.GetAll<WorkoutType>();
+            return Json(workoutTypes.ToList());
         }
 
-
-        // GET: api/DailyLog/5
+        // GET: api/WorkoutType/5
         [HttpGet("{id}")]
         [Authorize]
         public IActionResult Get(string id)
         {
-            DailyLog currentRecipe = accessor.Get<DailyLog>(id);
+            WorkoutType workoutType = accessor.Get<WorkoutType>(id);
 
 
-            return Json(currentRecipe);
+            return Json(workoutType);
         }
 
-        [HttpGet("{month}/{day}/{year}")]
-        [Authorize]
-        public IActionResult Get(int month, int day, int year)
-        {
-            DateTime date = new DateTime(year, month, day);
-            DailyLog dailyLog = accessor.GetDailyLogByDate(date);
-            if (dailyLog == null)
-            {
-                Response r = new Response();
-                r.Success = true;
-                r.Message = "Log does not exist.";
-
-                return Json(r);
-            }
-            return Json(dailyLog);
-        }
-
-        // POST: api/DailyLog
+        // POST: api/WorkoutType
         [HttpPost]
         [HttpPost("{id}")]
         [Authorize]
-        public Response Post(string id, [FromBody] DailyLog value)
+        public Response Post(string id, [FromBody] WorkoutType value)
         {
             Response r = new Response();
             if (value == null)
             {
                 r.Success = false;
-                r.Message = "Null DailyLog Found";
+                r.Message = "Null WorkoutType Found";
                 return r;
             }
-            
+
             value = GlobalFunctions.AddIdIfNeeded(value, id);
             accessor.Post(value);
 
@@ -73,14 +55,14 @@ namespace BeerNet.Controllers.UnacceptableHealth
 
             return r;
         }
-        
+
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         [Authorize]
         public IActionResult Delete(string id)
         {
-            return Json(accessor.Delete<DailyLog>(id));
+            return Json(accessor.Delete<WorkoutType>(id));
         }
     }
 }

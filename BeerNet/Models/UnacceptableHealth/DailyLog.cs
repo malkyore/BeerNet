@@ -21,6 +21,7 @@ namespace BeerNet.Models.UnacceptableHealth
         [BsonElement("name")]
         public string name { get; set; }
         [BsonElement("date")]
+        [BsonDateTimeOptions]
         public DateTime date { get; set; }
         [BsonElement("HealthRating")]
         public int HealthRating { get; set; }

@@ -15,12 +15,12 @@ namespace BeerNet.Controllers.UnacceptableHealth
     [ApiController]
     public class IngredientController : Controller
     {
+        HealthDataAccess accessor = new HealthDataAccess();
         // GET: api/Ingredient
         [HttpGet]
         [Authorize]
         public IActionResult Get()
         {
-            DataAccess accessor = new DataAccess();
             IEnumerable<Ingredient> currentRecipe = accessor.GetAll<Ingredient>();
             return Json(currentRecipe.ToList());
         }
@@ -30,7 +30,6 @@ namespace BeerNet.Controllers.UnacceptableHealth
         [Authorize]
         public IActionResult Get(string id)
         {
-            DataAccess accessor = new DataAccess();
             Ingredient currentRecipe = accessor.Get<Ingredient>(id);
             return Json(currentRecipe);
         }
@@ -48,7 +47,6 @@ namespace BeerNet.Controllers.UnacceptableHealth
         [Authorize]
         public IActionResult Post(string id, [FromBody] Ingredient value)
         {
-            DataAccess accessor = new DataAccess();
             value = GlobalFunctions.AddIdIfNeeded(value, id);
 
             return Json(accessor.Post(value));
@@ -59,8 +57,6 @@ namespace BeerNet.Controllers.UnacceptableHealth
         [Authorize]
         public IActionResult Delete(string id)
         {
-            DataAccess accessor = new DataAccess();
-
             return Json(accessor.Delete<Ingredient>(id));
         }
     }
