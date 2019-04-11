@@ -22,6 +22,11 @@ namespace BeerNet.Models.UnacceptableHealth
             _db = _client.GetDatabase("Health");
         }
 
+        internal IEnumerable<Goal> GetAllGoalsSorted()
+        {
+            return _db.GetCollection<Goal>(typeof(Goal).Name).Find(_ => true).SortByDescending(x => x.StartDate).ToList();
+        }
+
         //public IEnumerable<T> GetAll<T>(String sSort)
         //{
         //    //.SetSortOrder(SortBy.Ascending("SortByMe"))
@@ -35,7 +40,9 @@ namespace BeerNet.Models.UnacceptableHealth
 
         internal IEnumerable<GoalItem> GetCurrentGoalItems(DateTime dateTime)
         {
-            IEnumerable<Goal> goals =_db.GetCollection<Goal>(typeof(Goal).Name).Find(x => x.StartDate <= dateTime && x.EndDate >= dateTime).ToList();
+            dateTime = dateTime.AddHours(18);
+            //IEnumerable<Goal> goals =_db.GetCollection<Goal>(typeof(Goal).Name).Find(x => x.StartDate <= dateTime && x.EndDate >= dateTime).ToList();
+            IEnumerable<Goal> goals = _db.GetCollection<Goal>(typeof(Goal).Name).Find(x => dateTime >= x.StartDate && dateTime <= x.EndDate).ToList();
             List<GoalItem> goalItems = new List<GoalItem>();
 
             foreach (Goal g in goals)
