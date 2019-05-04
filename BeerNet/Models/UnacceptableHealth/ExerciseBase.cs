@@ -20,5 +20,7 @@ namespace BeerNet.Models.UnacceptableHealth
         public Boolean ShowTime;
         [BsonElement("ShowReps")]
         public Boolean ShowReps;
+        [BsonElement("Description")]
+        public String Description;
     }
 }

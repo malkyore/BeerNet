@@ -93,6 +93,15 @@ namespace BeerNet.Controllers.UnacceptableHealth
                 return r;
             }
 
+            /*if (id != null)
+            {
+                Exercise exercise = accessor.Get<Exercise>(id);
+                if (!exercise.Description.Equals(value.Description))
+                {
+                    bUpdateDescriptions = true;
+                }
+            }*/
+
             value = GlobalFunctions.AddIdIfNeeded(value, id);
             r = accessor.Post(value);
             if (r.Success)
@@ -105,6 +114,8 @@ namespace BeerNet.Controllers.UnacceptableHealth
 
         private void CopySettingsToAllWorkoutPlans(Exercise exercise)
         {
+            //TODO: Maybe make this an actual query instead of loading every single workout plan...
+            //TODO: db.WorkoutPlan.update({"ExercisePlan.Exercise.idString": "5cae9cc627ba9d2ab8569e01"}, {$set : {"ExercisePlan.$.Exercise.Description" : "test"}})
             IEnumerable<WorkoutPlan> workoutPlans = accessor.GetAll<WorkoutPlan>();
             foreach (WorkoutPlan wp in workoutPlans)
             {
@@ -115,6 +126,7 @@ namespace BeerNet.Controllers.UnacceptableHealth
                         ep.Exercise.ShowTime = exercise.ShowTime;
                         ep.Exercise.ShowWeight = exercise.ShowWeight;
                         ep.Exercise.ShowReps = exercise.ShowReps;
+                        ep.Exercise.Description = exercise.Description;
                     }
                 }
 

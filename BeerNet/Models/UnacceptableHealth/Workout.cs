@@ -26,5 +26,9 @@ namespace BeerNet.Models.UnacceptableHealth
         public String Notes;
         [BsonElement("Date")]
         public DateTime Date;
+        [BsonElement("StartTime")]
+        public long StartTime;
+        [BsonElement("EndTime")]
+        public long EndTime;
     }
 }

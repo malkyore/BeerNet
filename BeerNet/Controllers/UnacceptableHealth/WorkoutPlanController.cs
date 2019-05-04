@@ -32,8 +32,21 @@ namespace BeerNet.Controllers.UnacceptableHealth
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            WorkoutPlan goals = accessor.Get<WorkoutPlan>(id);
-            return Json(goals);
+            Response r = new Response();
+            
+            WorkoutPlan plan = accessor.Get<WorkoutPlan>(id);
+    
+            if (plan == null || plan == default(WorkoutPlan))
+            {
+                r.Success = false;
+                r.Message = "Null or default plan loaded";
+            } else
+            {
+                r.Success = true;
+                r.Message = JsonConvert.SerializeObject(plan);
+            }
+
+            return Json(r);
         }
 
         // GET: api/WorkoutPlan/WithExtras/5
