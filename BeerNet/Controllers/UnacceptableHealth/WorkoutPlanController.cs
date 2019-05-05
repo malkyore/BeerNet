@@ -87,6 +87,41 @@ namespace BeerNet.Controllers.UnacceptableHealth
             return Json(r);
         }
 
+        // GET: api/workoutPlanByExercise/idString
+        [HttpGet("ByExercise/{id}")]
+        [Authorize]
+        public IActionResult getByExercise(string id) {
+            Response r = new Response();
+            
+            try {
+                WorkoutPlanList workoutList = new WorkoutPlanList();
+                IEnumerable<WorkoutPlan> allPlans = accessor.GetAll<WorkoutPlan>();
+                List<WorkoutPlan> result = new List<WorkoutPlan>(); //accessor.GetWorkoutPlansByExercise(id);
+
+                int c = 0;
+
+                foreach (WorkoutPlan wp in allPlans) {
+                    foreach (ExercisePlanBase ep in wp.ExercisePlans) {
+                        c++;
+                        if (String.Compare(id, ep.Exercise.idString) == 0) {
+                            result.Add(wp);
+                            //break;
+                        }
+                    }
+                }
+
+                workoutList.WorkoutPlans = result;
+
+                r.Success = true;
+                r.Message = JsonConvert.SerializeObject(workoutList);
+            } catch (Exception ex) {
+                r.Success = false;
+                r.Message = ex.Message;
+            }
+
+            return Json(r);
+        }
+
         // POST: api/WorkoutPlan
         [HttpPost]
         [HttpPost("{id}")]

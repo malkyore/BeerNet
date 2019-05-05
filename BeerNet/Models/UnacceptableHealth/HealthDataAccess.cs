@@ -127,6 +127,10 @@ namespace BeerNet.Models.UnacceptableHealth
             return default(DailyLog);
         }
 
+        /*public List<WorkoutPlan> GetWorkoutPlansByExercise(string id) {
+            result = _db.GetCollection<WorkoutPlan>("WorkoutPlan").Find()
+        }*/
+
 
     }
 }
