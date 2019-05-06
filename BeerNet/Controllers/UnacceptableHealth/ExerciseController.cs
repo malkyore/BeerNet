@@ -127,6 +127,7 @@ namespace BeerNet.Controllers.UnacceptableHealth
                         ep.Exercise.ShowWeight = exercise.ShowWeight;
                         ep.Exercise.ShowReps = exercise.ShowReps;
                         ep.Exercise.Description = exercise.Description;
+                        ep.Exercise.name = exercise.name;
                     }
                 }
 
