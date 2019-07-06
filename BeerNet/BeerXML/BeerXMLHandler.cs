@@ -95,7 +95,7 @@ namespace BeerNet.BeerXML
                     Hops.Add(searchResult);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 IList<JToken> hopsList = recipeInfoFromXML["RECIPES"]["RECIPE"]["HOPS"].Children().Children().ToList();
                 foreach (JToken result in hopsList)
@@ -105,7 +105,7 @@ namespace BeerNet.BeerXML
                     Hops.Add(searchResult);
                 }
             }
-            
+
 
             try
             {
@@ -149,8 +149,12 @@ namespace BeerNet.BeerXML
                 }
             }
 
-                return MapRecipeInfo(recipeFromXML, Fermentables, Hops, Yeasts, Miscs, Style);
+            recipe final = MapRecipeInfo(recipeFromXML, Fermentables, Hops, Yeasts, Miscs, Style);
 
+            DataAccess accessor = new DataAccess();
+            accessor.PostRecipe(final);
+
+            return final;
         }
 
         public recipe MapRecipeInfo(RECIPE XMLRecipe, List<fermentableObj> Fermentables, List<hopObj> Hops, List<yeastObj> Yeasts, List<miscObj> Miscs, styleObj Style)
@@ -180,7 +184,7 @@ namespace BeerNet.BeerXML
         {
             List<hopAddition> hopAdditions = new List<hopAddition>();
 
-            foreach(hopObj h in Hops)
+            foreach (hopObj h in Hops)
             {
                 hop hp = new hop();
                 hp.aau = h.ALPHA.Value;
@@ -201,7 +205,7 @@ namespace BeerNet.BeerXML
         {
             List<fermentableAddition> fermentableAdditions = new List<fermentableAddition>();
 
-            foreach(fermentableObj f in Fermentables)
+            foreach (fermentableObj f in Fermentables)
             {
                 fermentable fm = new fermentable();
                 fm.name = f.NAME;
@@ -223,7 +227,7 @@ namespace BeerNet.BeerXML
         public List<yeast> mapYeastAdditions(List<yeastObj> Yeasts)
         {
             List<yeast> yeastAdditions = new List<yeast>();
-            foreach(yeastObj y in Yeasts)
+            foreach (yeastObj y in Yeasts)
             {
                 yeast ys = new yeast();
                 ys.attenuation = (float)y.ATTENUATION;
@@ -236,7 +240,7 @@ namespace BeerNet.BeerXML
         public List<adjunctAddition> mapAdjuntAdditions(List<miscObj> Miscs)
         {
             List<adjunctAddition> adjunctAdditions = new List<adjunctAddition>();
-            foreach(miscObj o in Miscs)
+            foreach (miscObj o in Miscs)
             {
                 adjunct aj = new adjunct();
                 aj.name = o.NAME;
