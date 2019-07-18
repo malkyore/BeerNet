@@ -7,6 +7,7 @@ using BeerNet.Models.UnacceptableHealth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BeerNet.Controllers.UnacceptableHealth
 {
@@ -64,6 +65,26 @@ namespace BeerNet.Controllers.UnacceptableHealth
         public IActionResult Delete(string id)
         {
             return Json(accessor.Delete<Workout>(id));
+        }
+
+        [HttpGet("gethistory/{id}")]
+        [Authorize]
+        public Response GetHistory(string id)
+        {
+            Response r = new Response();
+            if (id == null)
+            {
+                r.Success = false;
+                r.Message = "Null ID Passed";
+                return r;
+            }
+
+            IEnumerable<Workout> workouts = accessor.GetAllWorkoutsByWorkoutPlanID(id);
+
+            r.Success = true;
+            r.Message = JsonConvert.SerializeObject(workouts);
+
+            return r;
         }
     }
 }

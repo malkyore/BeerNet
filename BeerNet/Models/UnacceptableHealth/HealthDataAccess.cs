@@ -57,6 +57,11 @@ namespace BeerNet.Models.UnacceptableHealth
             return goalItems;
         }
 
+        internal IEnumerable<Workout> GetAllWorkoutsByWorkoutPlanID(string id)
+        {
+            return _db.GetCollection<Workout>(typeof(Workout).Name).Find(x => x.WorkoutPlan.idString == id).SortByDescending(x => x.Date).ToList();
+        }
+
         internal int ModifyGoalItem(GoalItemAction value)
         {
             int goalsUpdated = 0;

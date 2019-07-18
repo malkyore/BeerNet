@@ -56,7 +56,6 @@ namespace BeerNet.Controllers.UnacceptableHealth
         public IActionResult GetWithExtras(string id)
         {
             Response r = new Response();
-            WorkoutPlanWithExtras data = new WorkoutPlanWithExtras();
             WorkoutPlan workoutPlan;
             List<Exercise> exercises = accessor.GetAll<Exercise>().ToList();
             List<WorkoutType> workoutTypes = accessor.GetAll<WorkoutType>().ToList();
@@ -72,12 +71,11 @@ namespace BeerNet.Controllers.UnacceptableHealth
                     workoutPlan = accessor.Get<WorkoutPlan>(id);
                 }
 
-                data.WorkoutPlan = workoutPlan;
-                data.Exercises = exercises;
-                data.WorkoutTypes = workoutTypes;
+                //using a tuple just to get it to return data with the correct case. ex: WorkoutPlan instead of workoutPlan
+                var data = (WorkoutPlan: workoutPlan, Exercises: exercises, WorkoutTypes: workoutTypes);
 
                 r.Success = true;
-                r.Message = JsonConvert.SerializeObject(data);
+                r.Message = JsonConvert.SerializeObject(new { data.WorkoutPlan, data.Exercises, data.WorkoutTypes });
             } catch (Exception ex)
             {
                 r.Success = false;
@@ -94,7 +92,6 @@ namespace BeerNet.Controllers.UnacceptableHealth
             Response r = new Response();
             
             try {
-                WorkoutPlanList workoutList = new WorkoutPlanList();
                 IEnumerable<WorkoutPlan> allPlans = accessor.GetAll<WorkoutPlan>();
                 List<WorkoutPlan> result = new List<WorkoutPlan>(); //accessor.GetWorkoutPlansByExercise(id);
 
@@ -109,11 +106,11 @@ namespace BeerNet.Controllers.UnacceptableHealth
                         }
                     }
                 }
-
-                workoutList.WorkoutPlans = result;
+                
+                var t = (WorkoutPlans: result, "");
 
                 r.Success = true;
-                r.Message = JsonConvert.SerializeObject(workoutList);
+                r.Message = JsonConvert.SerializeObject(new { t.WorkoutPlans });
             } catch (Exception ex) {
                 r.Success = false;
                 r.Message = ex.Message;

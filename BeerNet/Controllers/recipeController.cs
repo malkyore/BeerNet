@@ -8,6 +8,7 @@ using BeerNet.Models;
 using MongoDB.Bson;
 using BeerNet.MathFunctions;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace BeerNet.Controllers
 {
@@ -76,6 +77,39 @@ namespace BeerNet.Controllers
         {
             DataAccess accessor = new DataAccess();
             return Json(accessor.Delete<recipe>(id));
+        }
+
+        [HttpGet("getWithIngredients/{id}")]
+        [Authorize]
+        public Response GetWithIngredients(string id)
+        {
+            DataAccess da = new DataAccess();
+
+            Response r = new Response();
+
+            try
+            {
+                recipe recipe = da.Get<recipe>(id);
+                IEnumerable<hop> hops = da.GetAll<hop>();
+                IEnumerable<fermentable> fermentables = da.GetAll<fermentable>();
+                IEnumerable<yeast> yeasts = da.GetAll<yeast>();
+
+                if (recipe == null || hops == null || fermentables == null || yeasts == null)
+                {
+                    throw new Exception("Some data returned null");
+                }
+
+                r.Success = true;
+                var data = (Recipe: recipe, Hops: hops, Fermentables: fermentables, Yeasts: yeasts);
+
+                r.Message = JsonConvert.SerializeObject(new { data.Recipe, data.Hops, data.Fermentables, data.Yeasts});
+
+            } catch (Exception ex)
+            {
+                r.Fail(ex);
+            }
+
+            return r;
         }
     }
 }

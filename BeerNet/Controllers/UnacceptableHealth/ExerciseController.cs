@@ -57,10 +57,15 @@ namespace BeerNet.Controllers.UnacceptableHealth
             if (exercise != null || muscles != null)
             {
                 r.Success = true;
-                ExerciseWithMuscleList result = new ExerciseWithMuscleList();
+                /*ExerciseWithMuscleList result = new ExerciseWithMuscleList();
                 result.Exercise = exercise;
                 result.Muscles = muscles;
-                r.Message = JsonConvert.SerializeObject(result);
+                r.Message = JsonConvert.SerializeObject(result);*/
+
+                var result = (Exercise: exercise, Muscles: muscles);
+
+                //r.Message = JsonConvert.SerializeObject(new { exercise, muscles });
+                r.Message = JsonConvert.SerializeObject(new { result.Exercise, result.Muscles });
             } else
             {
                 string sError = "";
