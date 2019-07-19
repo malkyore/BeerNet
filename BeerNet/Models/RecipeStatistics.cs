@@ -12,5 +12,7 @@ namespace BeerNet.Models
         public double fg { get; set; }
         public double og { get; set; }
         public double srm { get; set; }
+        public double initialStrikeWaterTemp { get; set; }
+        public double initialStrikeWaterVolume { get; set; }
     }
 }

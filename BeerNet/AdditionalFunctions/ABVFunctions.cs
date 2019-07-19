@@ -42,6 +42,9 @@ namespace BeerNet.MathFunctions
                 attenuationTotal += y.attenuation;
             }
 
+            if (yeastCount == 0)
+                return 0;
+
             double finalAttenuation = attenuationTotal / yeastCount;
             fg = 1 + (((currentRecipe.recipeStats.og - 1) * 1000) * ((100 - finalAttenuation) / 100)) / 1000;
             return fg;

@@ -16,5 +16,11 @@ namespace BeerNet.Models
         public double ibuBoilTimeCurveFit { get; set; }
         [BsonElement("intoFermenterVolume")]
         public double intoFermenterVolume { get; set; }
+        [BsonElement("gristRatio")]
+        public double gristRatio { get; set; } //ratio of water to grain pounds
+        [BsonElement("initialMashTemp")]
+        public double initialMashTemp { get; set; } //initial temperature of grains before starting the mash
+        [BsonElement("targetMashTemp")]
+        public double targetMashTemp { get; set; }
     }
 }

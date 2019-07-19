@@ -40,7 +40,8 @@ namespace BeerNet.MathFunctions
                     fG = (1.65 * (Math.Pow(0.000125, (currentRecipe.recipeStats.og - 1))));
                     fT = ((1 - Math.Pow(Math.E, IBUBoilTimeCurveFit * h.time)) / 4.15);
                     Util = fG * fT;
-                    ibu += (((h.amount * h.hop.aau) * Util * 74.89) / IntoFermenterVolume);
+                    if (IntoFermenterVolume != 0)
+                        ibu += (((h.amount * h.hop.aau) * Util * 74.89) / IntoFermenterVolume);
                 }
             }
 
