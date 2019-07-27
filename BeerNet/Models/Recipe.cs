@@ -19,8 +19,6 @@ namespace BeerNet.Models
         }
         [BsonElement("name")]
         public string name { get; set; }
-        [BsonElement("style")]
-        public string style { get; set; }
         [BsonElement("description")]
         public string description { get; set; }
         [BsonElement("recipeStats")]
@@ -43,8 +41,24 @@ namespace BeerNet.Models
         public List<yeast> yeasts { get; set; }
         [BsonElement("adjuncts")]
         public List<adjunctAddition> adjuncts { get; set; }
+        [BsonElement("beerStyle")]
+        public styleBase beerStyle { get; set; }
+
+        //Obsolete. Use beerStyle above
         [BsonElement("styleID")]
         public string styleID { get; set; }
-        
+        [BsonElement("style")]
+        public string style { get; set; }
+
+        public double grainsInPounds()
+        {
+            double lbs = 0;
+            foreach (fermentableAddition fa in fermentables)
+            {
+                lbs += fa.weight;
+            }
+
+            return lbs;
+        }
     }
 }
