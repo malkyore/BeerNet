@@ -8,12 +8,8 @@ namespace BeerNet.Models
 {
     public class hopAddition
     {
-       // [BsonElement("Id")]
-      //  public string Id { get; set; }
-        //[BsonElement("recipeID")]
-        //public string recipeID { get; set; }
-        [BsonElement("hopID")]
-        public string hopID { get; set; }
+        [BsonElement("additionGuid")]
+        public string additionGuid { get; set; }
         [BsonElement("amount")]
         public float amount { get; set; }
         [BsonElement("type")]

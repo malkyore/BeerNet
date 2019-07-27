@@ -40,7 +40,7 @@ namespace BeerNet.Models
         [BsonElement("fermentables")]
         public List<fermentableAddition> fermentables { get; set; }
         [BsonElement("yeasts")]
-        public List<yeast> yeasts { get; set; }
+        public List<yeastAddition> yeasts { get; set; }
         [BsonElement("adjuncts")]
         public List<adjunctAddition> adjuncts { get; set; }
         [BsonElement("styleID")]

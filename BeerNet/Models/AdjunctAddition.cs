@@ -8,11 +8,8 @@ namespace BeerNet.Models
 {
     public class adjunctAddition
     {
-        //[BsonElement("Id")]
-        //public string Id { get; set; }
-        //public string recipeID { get; set; }
-        [BsonElement("adjunctID")]
-        public string adjunctID { get; set; }
+        [BsonElement("additionGuid")]
+        public string additionGuid { get; set; }
         [BsonElement("amount")]
         public double amount { get; set; }
         [BsonElement("unit")]
