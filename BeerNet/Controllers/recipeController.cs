@@ -93,6 +93,7 @@ namespace BeerNet.Controllers
                 IEnumerable<hop> hops = da.GetAll<hop>();
                 IEnumerable<fermentable> fermentables = da.GetAll<fermentable>();
                 IEnumerable<yeast> yeasts = da.GetAll<yeast>();
+                IEnumerable<style> styles = da.GetAll<style>();
 
                 if (recipe == null || hops == null || fermentables == null || yeasts == null)
                 {
@@ -100,10 +101,40 @@ namespace BeerNet.Controllers
                 }
 
                 r.Success = true;
-                var data = (Recipe: recipe, Hops: hops, Fermentables: fermentables, Yeasts: yeasts);
+                var data = (Recipe: recipe, Hops: hops, Fermentables: fermentables, Yeasts: yeasts, Styles: styles);
 
-                r.Message = JsonConvert.SerializeObject(new { data.Recipe, data.Hops, data.Fermentables, data.Yeasts});
+                r.Message = JsonConvert.SerializeObject(new { data.Recipe, data.Hops, data.Fermentables, data.Yeasts, data.Styles});
 
+            } catch (Exception ex)
+            {
+                r.Fail(ex);
+            }
+
+            return r;
+        }
+
+        [HttpGet("mashInfusion/{id}/{T1}/{T2}/{Wm}/{Tw}")]
+        [Authorize]
+        public Response MashInfusion(string id, double T1, double T2, double Wm, double Tw)
+        {
+            Response r = new Response();
+            try
+            {
+                DataAccess accessor = new DataAccess();
+                recipe value = accessor.Get<recipe>(id);
+
+                double Wa = 0; //Wa = water to add to the mash (the result of the equation
+                               //double T1 = 0; //T1 = Initial(Current) temp of mash
+                               //double T2 = 0; //T2 = Target temp of mash
+                double G = value.grainsInPounds(); //G = pounds of grains in mash
+                                                   //double Wm = 0; //Wm = total amount of water in mash
+                                                   //double Tw = 0; //Tw = temperature of water you're adding to mash
+
+
+                Wa = (T2 - T1) * (.2 * G + Wm) / (Tw - T2);
+
+                r.Success = true;
+                r.Message = Wa.ToString();
             } catch (Exception ex)
             {
                 r.Fail(ex);

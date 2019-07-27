@@ -16,5 +16,27 @@ namespace BeerNet.Models
         public string name { get; set; }
         [BsonElement("aau")]
         public double aau { get; set; }
+        [BsonElement("beta")]
+        public double beta { get; set; }
+        [BsonElement("notes")]
+        public string notes { get; set; }
+        [BsonElement("type")]
+        public string type { get; set; }
+
+        //random weird stuff
+        [BsonElement("hsi")]
+        public double hsi { get; set; }
+        [BsonElement("origin")]
+        public string origin { get; set; }
+        [BsonElement("substitues")]
+        public string substitutes { get; set; }
+        [BsonElement("humulene")]
+        public double humulene { get; set; }
+        [BsonElement("caryophyllene")]
+        public double caryophyllene { get; set; }
+        [BsonElement("cohumulone")]
+        public double cohumulone { get; set; }
+        [BsonElement("myrcene")]
+        public double myrcene { get; set; }
     }
 }
