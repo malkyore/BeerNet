@@ -30,7 +30,7 @@ namespace BeerNet.MathFunctions
                 }
                 else
                 {
-                    PPGCalc += ((f.fermentable.yield / 100) * 46) * (currentRecipe.equipmentProfile.effiency/100) * f.weight;
+                    PPGCalc += ((f.fermentable.yield / 100) * 46) * (currentRecipe.equipmentProfile.efficiency/100) * f.weight;
                 }
 
             }
