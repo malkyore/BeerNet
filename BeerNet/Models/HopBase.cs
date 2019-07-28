@@ -12,8 +12,8 @@ namespace BeerNet.Models
     {
         [BsonElement("idString")]
         public string idString { get; set; }
-        [BsonElement("createdById")]
-        public string createdById { get; set; }
+        [BsonElement("createdByUserId")]
+        public string createdByUserId { get; set; }
         [BsonElement("name")]
         public string name { get; set; }
         [BsonElement("aau")]

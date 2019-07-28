@@ -19,8 +19,8 @@ namespace BeerNet.Models
         public float boilSize { get; set; }        
         [BsonElement("intoFermenterVolume")]
         public float intoFermenterVolume { get; set; }
-        [BsonElement("effiency")]
-        public float effiency { get; set; }
+        [BsonElement("efficiency")]
+        public float efficiency { get; set; }
         [BsonElement("batchSize")]
         public float batchSize { get; set; }
     }
