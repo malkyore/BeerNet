@@ -14,8 +14,6 @@ namespace BeerNet.Models
         public string fermentableCalcType { get; set; }
         [BsonElement("ibuBoilTimeCurveFit")]
         public double ibuBoilTimeCurveFit { get; set; }
-        [BsonElement("intoFermenterVolume")]
-        public double intoFermenterVolume { get; set; }
         [BsonElement("gristRatio")]
         public double gristRatio { get; set; } //ratio of water to grain pounds
         [BsonElement("initialMashTemp")]

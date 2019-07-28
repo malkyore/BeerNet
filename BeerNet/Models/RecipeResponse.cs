@@ -24,5 +24,7 @@ namespace BeerNet
             Message = "Recipe was not found";
             recipeStats = null;
         }
+
+        public Guid lastModifiedGuid;
     }
 }

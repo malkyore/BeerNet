@@ -27,7 +27,7 @@ namespace BeerNet.MathFunctions
             }
             try
             {
-                IntoFermenterVolume = currentRecipe.recipeParameters.intoFermenterVolume;
+                IntoFermenterVolume = currentRecipe.equipmentProfile.intoFermenterVolume;
             }
             catch (Exception e)
             {

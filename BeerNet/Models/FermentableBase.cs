@@ -11,6 +11,8 @@ namespace BeerNet.Models
         //Required 
         [BsonElement("idString")]
         public string idString { get; set; }
+        [BsonElement("createdById")]
+        public string createdById { get; set; }
         [BsonElement("name")]
         public string name { get; set; }
         [BsonElement("yield")]

@@ -164,19 +164,19 @@ namespace BeerNet.BeerXML
             beerNetRecipe.fermentables = new List<fermentableAddition>();
             beerNetRecipe.hops = new List<hopAddition>();
             beerNetRecipe.adjuncts = new List<adjunctAddition>();
-            beerNetRecipe.yeasts = new List<yeast>();
+            beerNetRecipe.yeasts = new List<yeastAddition>();
 
-            beerNetRecipe.name = XMLRecipe.NAME;
-            beerNetRecipe.description = "Converted from Beer XML.";
-            beerNetRecipe.style = Style.NAME;
-            beerNetRecipe.recipeParameters.ibuCalcType = "basic";
-            beerNetRecipe.recipeParameters.fermentableCalcType = "basic";
-            beerNetRecipe.recipeParameters.ibuBoilTimeCurveFit = -0.04;
-            beerNetRecipe.recipeParameters.intoFermenterVolume = 5;
-            beerNetRecipe.hops = mapHopAdditions(Hops);
-            beerNetRecipe.fermentables = mapFermentableAdditions(Fermentables);
-            beerNetRecipe.yeasts = mapYeastAdditions(Yeasts);
-            beerNetRecipe.adjuncts = mapAdjuntAdditions(Miscs);
+           // beerNetRecipe.name = XMLRecipe.NAME;
+           // beerNetRecipe.description = "Converted from Beer XML.";
+           // beerNetRecipe.style = Style.NAME;
+           // beerNetRecipe.recipeParameters.ibuCalcType = "basic";
+           // beerNetRecipe.recipeParameters.fermentableCalcType = "basic";
+           // beerNetRecipe.recipeParameters.ibuBoilTimeCurveFit = -0.04;
+           // beerNetRecipe.recipeParameters.intoFermenterVolume = 5;
+           // beerNetRecipe.hops = mapHopAdditions(Hops);
+           // beerNetRecipe.fermentables = mapFermentableAdditions(Fermentables);
+           // beerNetRecipe.yeasts = mapYeastAdditions(Yeasts);
+           // beerNetRecipe.adjuncts = mapAdjuntAdditions(Miscs);
             return beerNetRecipe;
         }
 
@@ -210,14 +210,14 @@ namespace BeerNet.BeerXML
                 fermentable fm = new fermentable();
                 fm.name = f.NAME;
                 //This might be wrong. http://howtobrew.com/book/section-2/what-is-malted-grain/extraction-and-maximum-yield
-                fm.ppg = (float)(1000 * f.POTENTIAL.Value) - 1000;
+              //  fm.ppg = (float)(1000 * f.POTENTIAL.Value) - 1000;
                 fm.type = f.TYPE;
                 fm.color = (float)f.COLOR.Value;
                 fm.maltster = f.ORIGIN;
 
                 fermentableAddition addition = new fermentableAddition();
                 addition.fermentable = fm;
-                addition.use = "Mash";
+               // addition.use = "Mash";
                 addition.weight = (float)(f.AMOUNT * 2.2);//Amount is in kilograms
                 fermentableAdditions.Add(addition);
             }

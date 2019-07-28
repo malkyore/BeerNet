@@ -14,7 +14,7 @@ namespace BeerNet.MathFunctions
             double PPGCalc = 0;
             try
             {
-                IntoFermenterVolume = currentRecipe.recipeParameters.intoFermenterVolume;
+                IntoFermenterVolume = currentRecipe.equipmentProfile.intoFermenterVolume;
             }
             catch (Exception e)
             {
@@ -24,7 +24,15 @@ namespace BeerNet.MathFunctions
             double og = 0;
             foreach (fermentableAddition f in currentRecipe.fermentables)
             {
-                PPGCalc += f.fermentable.ppg * f.weight;
+                if(f.fermentable.type == "Extract")
+                {
+                    PPGCalc += ((f.fermentable.yield / 100) * 46) * f.weight;
+                }
+                else
+                {
+                    PPGCalc += ((f.fermentable.yield / 100) * 46) * (currentRecipe.equipmentProfile.effiency/100) * f.weight;
+                }
+
             }
             og = 1 + (PPGCalc / IntoFermenterVolume) / 1000;
 
@@ -36,10 +44,10 @@ namespace BeerNet.MathFunctions
             int yeastCount = 0;
             double attenuationTotal = 0;
             double fg = 0;
-            foreach (yeast y in currentRecipe.yeasts)
+            foreach (yeastAddition y in currentRecipe.yeasts)
             {
                 yeastCount += 1;
-                attenuationTotal += y.attenuation;
+                attenuationTotal += y.yeast.attenuation;
             }
 
             if (yeastCount == 0)
@@ -55,7 +63,7 @@ namespace BeerNet.MathFunctions
             double IntoFermenterVolume = 0;
             try
             {
-                IntoFermenterVolume = currentRecipe.recipeParameters.intoFermenterVolume;
+                IntoFermenterVolume = currentRecipe.equipmentProfile.intoFermenterVolume;
             }
             catch (Exception e)
             {

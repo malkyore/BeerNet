@@ -47,13 +47,26 @@ namespace BeerNet.Controllers
                 DataAccess accessor = new DataAccess();
                 try
                 {
-
+                    /*
+                     * Checks if someone else has modified the recipe.
+                     * */
+                    if(!String.IsNullOrEmpty(id))
+                    {
+                        recipe existingRecipe = accessor.Get<recipe>(id);
+                        if(existingRecipe.lastModifiedGuid != value.lastModifiedGuid)
+                        {
+                            throw new Exception("Recipe has been modified.  Please refresh");
+                        }
+                    }
+                    Guid lastModified = new Guid();
+                    value.lastModifiedGuid = lastModified;
                     value = GlobalFunctions.AddIdIfNeeded(value, id);
                     value.recipeStats = MathFunctions.GlobalFunctions.updateStats(value);
                     bool recipeResponse = accessor.PostRecipe(value);
                     response = new RecipeStatsResponse();
                     response.recipeStats = value.recipeStats;
                     response.idString = value.idString;
+                    response.lastModifiedGuid = lastModified;
                     return response;
                 }
                 catch (Exception e)

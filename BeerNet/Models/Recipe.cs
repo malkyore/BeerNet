@@ -19,6 +19,18 @@ namespace BeerNet.Models
         }
         [BsonElement("name")]
         public string name { get; set; }
+        [BsonElement("lastModifiedGuid")]
+        public Guid lastModifiedGuid { get; set; }
+        [BsonElement("createdByUserID")]
+        public string createdByUserID { get; set; }
+        [BsonElement("groupID")]
+        public string groupID { get; set; }
+        [BsonElement("isGroupEditable")]
+        public bool isGroupEditable { get; set; }
+        [BsonElement("isPublic")]
+        public bool isPublic { get; set; }
+        [BsonElement("deleted")]
+        public bool deleted { get; set; }
         [BsonElement("description")]
         public string description { get; set; }
         [BsonElement("recipeStats")]
@@ -27,8 +39,6 @@ namespace BeerNet.Models
         public RecipeParameters recipeParameters { get; set; }
         [BsonElement("version")]
         public double version { get; set; }
-        [BsonElement("parentRecipe")]
-        public string parentRecipe { get; set; }
         [BsonElement("clonedFrom")]
         public string clonedFrom { get; set; }
         [BsonElement("hidden")]
@@ -41,14 +51,12 @@ namespace BeerNet.Models
         public List<yeastAddition> yeasts { get; set; }
         [BsonElement("adjuncts")]
         public List<adjunctAddition> adjuncts { get; set; }
-        [BsonElement("beerStyle")]
-        public styleBase beerStyle { get; set; }
-
-        //Obsolete. Use beerStyle above
-        [BsonElement("styleID")]
-        public string styleID { get; set; }
         [BsonElement("style")]
-        public string style { get; set; }
+        public styleBase style { get; set; }
+        [BsonElement("boilVolume")]
+        public float boilVolume { get; set; }
+        [BsonElement("equipmentProfile")]
+        public equipmentProfileBase equipmentProfile {get;set;}
 
         public double grainsInPounds()
         {
