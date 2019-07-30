@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using BeerNet.Models;
+using BeerNet.MathFunctions;
 
 namespace BeerNet.Controllers
 {
@@ -35,6 +37,47 @@ namespace BeerNet.Controllers
           .SetBasePath(Directory.GetCurrentDirectory())
           .AddJsonFile("appsettings.json");
             _configuration = builder.Build();
+        }
+
+        [HttpGet]
+        [Route("BeerNet/userSettings")]
+        public IActionResult GetUserInfo()
+        {
+            string userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            DataAccess accessor = new DataAccess();
+            userSettings currentUserSettings = accessor.GetAll<userSettings>().FirstOrDefault();
+            if(currentUserSettings == null)
+            {
+                currentUserSettings = generateDefaultUserSettings();
+                accessor.Post(currentUserSettings);
+            }
+            return Json(currentUserSettings);
+        }
+
+        [HttpPost]
+        [Route("BeerNet/userSettings")]
+        public IActionResult UpdateUserInfo([FromBody]userSettings currentUserSettings)
+        {
+            string userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            DataAccess accessor = new DataAccess();
+            userSettings existingUserSettings = accessor.GetAll<userSettings>().FirstOrDefault();
+            if (existingUserSettings == null)
+            {
+                existingUserSettings = generateDefaultUserSettings();
+                accessor.Post(currentUserSettings);
+                existingUserSettings = accessor.GetAll<userSettings>().FirstOrDefault();
+                existingUserSettings.firstName = currentUserSettings.firstName;
+                existingUserSettings.lastName = currentUserSettings.lastName;
+                existingUserSettings.theme = currentUserSettings.theme;
+            }
+            else
+            {
+                existingUserSettings.firstName = currentUserSettings.firstName;
+                existingUserSettings.lastName = currentUserSettings.lastName;
+                existingUserSettings.theme = currentUserSettings.theme;
+            }
+            currentUserSettings = GlobalFunctions.AddIdIfNeeded(existingUserSettings, existingUserSettings.idString);
+            return Json(accessor.Post(currentUserSettings));
         }
 
         [AllowAnonymous]
@@ -63,6 +106,7 @@ namespace BeerNet.Controllers
         [Route("BeerNet/Register")]
         public async Task<object> Register([FromBody] LoginViewModel model)
         {
+            DataAccess accessor = new DataAccess();
             var user = new ApplicationUser
             {
                 UserName = model.Username,
@@ -73,10 +117,24 @@ namespace BeerNet.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
+                accessor.Post(generateDefaultUserSettings());
                 return Json(GenerateJwtToken(model.Username, user));
             }
       
             throw new ApplicationException("UNKNOWN_ERROR");
+        }
+
+        public userSettings generateDefaultUserSettings()
+        {
+            userSettings currentUserSettings = new userSettings
+            {
+                firstName = "",
+                lastName = "",
+                userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                userCreatedDate = DateTimeOffset.Now,
+                theme = "dark"
+            };
+            return currentUserSettings;
         }
 
         private string GenerateJwtToken(string email, ApplicationUser user)
