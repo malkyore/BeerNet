@@ -36,10 +36,9 @@ namespace BeerNet.Controllers
         }
 
         // POST api/values
-        [HttpPost("{id}")]
-        [HttpPost]
+        [HttpPost("{id}/{bSaveRecipe}")]
         [Authorize]
-        public RecipeStatsResponse Post([FromBody]recipe value, string id)
+        public RecipeStatsResponse Post([FromBody]recipe value, string id, Boolean bSaveRecipe)
         {
             RecipeStatsResponse response = new RecipeStatsResponse();
             if (value != null)
@@ -50,19 +49,24 @@ namespace BeerNet.Controllers
                     /*
                      * Checks if someone else has modified the recipe.
                      * */
-                    if(!String.IsNullOrEmpty(id))
+                    if (!String.IsNullOrEmpty(id))
                     {
                         recipe existingRecipe = accessor.Get<recipe>(id);
-                        if(existingRecipe.lastModifiedGuid != value.lastModifiedGuid)
+                        if (existingRecipe.lastModifiedGuid != value.lastModifiedGuid)
                         {
                             throw new Exception("Recipe has been modified.  Please refresh");
                         }
                     }
-                    Guid lastModified = new Guid();
+                    Guid lastModified = Guid.NewGuid();
                     value.lastModifiedGuid = lastModified;
                     value = GlobalFunctions.AddIdIfNeeded(value, id);
                     value.recipeStats = MathFunctions.GlobalFunctions.updateStats(value);
-                    bool recipeResponse = accessor.PostRecipe(value);
+
+                    if (bSaveRecipe)
+                    {
+                        accessor.PostRecipe(value);
+                    }
+
                     response = new RecipeStatsResponse();
                     response.recipeStats = value.recipeStats;
                     response.idString = value.idString;
@@ -80,8 +84,18 @@ namespace BeerNet.Controllers
                 response.RecipeNullFailure();
                 return response;
             }
+
         }
 
+        // POST api/values
+        [HttpPost("{id}")]
+        [HttpPost]
+        [Authorize]
+        public RecipeStatsResponse Post([FromBody]recipe value, string id)
+        {
+            return Post(value, id, true);
+        }
+        
         // DELETE api/values/5
         [HttpDelete("{id}")]
         [HttpDelete]
@@ -155,5 +169,34 @@ namespace BeerNet.Controllers
 
             return r;
         }
+
+        //needs to be a POST because android doesn't send body's with GET
+        /*[HttpPost("calculateStats")]
+        [HttpPost("calculateStats/{checkLastModifiedGuid}")]
+        [Authorize]
+        public RecipeStatsResponse CalculateStats([FromBody]recipe value, Boolean checkLastModifiedGuid)
+        {
+            RecipeStatsResponse response = new RecipeStatsResponse();
+            
+            try
+            {
+                if (checkLastModifiedGuid)
+                {
+                    DataAccess dataAccess = new DataAccess();
+                    recipe r = dataAccess.Get<recipe>(value.idString);
+                    if (r.lastModifiedGuid != value.lastModifiedGuid)
+                        throw new Exception("Recipe has been modified.  Please refresh");
+                }
+
+                response.recipeStats = GlobalFunctions.updateStats(value);
+            } catch (Exception ex)
+            {
+                response.Fail(ex);
+            }
+
+            return response;
+
+            
+        }*/
     }
 }
