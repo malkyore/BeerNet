@@ -11,11 +11,11 @@ namespace BeerNet.Models
         [BsonElement("additionGuid")]
         public string additionGuid { get; set; }
         [BsonElement("amount")]
-        public float amount { get; set; }
+        public double amount { get; set; }
         [BsonElement("type")]
         public string type { get; set; }
         [BsonElement("time")]
-        public float time { get; set; }
+        public double time { get; set; }
         [BsonElement("hop")]
         public hopbase hop { get; set; }
     }

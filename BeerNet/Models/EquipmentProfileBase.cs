@@ -16,12 +16,12 @@ namespace BeerNet.Models
         [BsonElement("idString")]
         public string idString { get; set; }
         [BsonElement("boilSize")]
-        public float boilSize { get; set; }        
+        public double boilSize { get; set; }        
         [BsonElement("intoFermenterVolume")]
-        public float intoFermenterVolume { get; set; }
+        public double intoFermenterVolume { get; set; }
         [BsonElement("efficiency")]
-        public float efficiency { get; set; }
+        public double efficiency { get; set; }
         [BsonElement("batchSize")]
-        public float batchSize { get; set; }
+        public double batchSize { get; set; }
     }
 }

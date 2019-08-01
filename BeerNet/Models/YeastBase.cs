@@ -17,7 +17,7 @@ namespace BeerNet.Models
         [BsonElement("lab")]
         public string lab { get; set; }
         [BsonElement("attenuation")]
-        public float attenuation { get; set; }
+        public double attenuation { get; set; }
         [BsonElement("beertype")]
         public string beertype { get; set; }
         [BsonElement("form")]

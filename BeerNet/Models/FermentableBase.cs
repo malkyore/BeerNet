@@ -16,9 +16,9 @@ namespace BeerNet.Models
         [BsonElement("name")]
         public string name { get; set; }
         [BsonElement("yield")]
-        public float yield { get; set; }
+        public double yield { get; set; }
         [BsonElement("color")]
-        public float color { get; set; }
+        public double color { get; set; }
         [BsonElement("type")]
         public string type { get; set; }
 
@@ -28,13 +28,13 @@ namespace BeerNet.Models
         [BsonElement("origin")]
         public string origin { get; set; }
         [BsonElement("coarse_fine_diff")]
-        public float coarse_fine_diff { get; set; }
+        public double coarse_fine_diff { get; set; }
         [BsonElement("moisture")]
-        public float moisture { get; set; }
+        public double moisture { get; set; }
         [BsonElement("diastatic_power")]
-        public float diastatic_power { get; set; }
+        public double diastatic_power { get; set; }
         [BsonElement("protein")]
-        public float protein { get; set; }
+        public double protein { get; set; }
         [BsonElement("notes")]
         public string notes { get; set; }
     }

@@ -11,7 +11,7 @@ namespace BeerNet.Models
         [BsonElement("additionGuid")]
         public string additionGuid { get; set; }
         [BsonElement("weight")]
-        public float weight { get; set; }
+        public double weight { get; set; }
         [BsonElement("fermentable")]
         public fermentable fermentable { get; set; }
     }

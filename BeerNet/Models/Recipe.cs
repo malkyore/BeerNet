@@ -54,7 +54,7 @@ namespace BeerNet.Models
         [BsonElement("style")]
         public styleBase style { get; set; }
         [BsonElement("boilVolume")]
-        public float boilVolume { get; set; }
+        public double boilVolume { get; set; }
         [BsonElement("equipmentProfile")]
         public equipmentProfileBase equipmentProfile {get;set;}
 
