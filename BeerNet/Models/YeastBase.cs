@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BeerNet.Models
 {
+    [BsonIgnoreExtraElements]
     public class YeastBase
     {
         [BsonElement("idString")]

@@ -7,6 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BeerNet.Models
 {
+    [BsonIgnoreExtraElements]
     public class hop : hopbase
     {
 

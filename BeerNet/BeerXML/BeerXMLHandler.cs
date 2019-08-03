@@ -14,7 +14,8 @@ namespace BeerNet.BeerXML
 {
     public class BeerXMLHandler
     {
-        private const double KGtoOZ = 35.71428571428571;
+        private const double KGtoLB = 2.2046226218488;
+        private const double KGtoOZ = KGtoLB * 16;//35.71428571428571;
 
         public recipe ParseBeerXML(string xml)
         {
@@ -150,7 +151,9 @@ namespace BeerNet.BeerXML
             }
 
             recipe final = MapRecipeInfo(recipeFromXML, Fermentables, Hops, Yeasts, Miscs, Style);
-
+            final.equipmentProfile = getDefaultEquipmentProfile();
+            final.recipeStats = makeEmptyRecipeStats();
+            final.recipeStats = MathFunctions.GlobalFunctions.updateStats(final);
             DataAccess accessor = new DataAccess();
             accessor.PostRecipe(final);
 
@@ -160,24 +163,52 @@ namespace BeerNet.BeerXML
         public recipe MapRecipeInfo(RECIPE XMLRecipe, List<fermentableObj> Fermentables, List<hopObj> Hops, List<yeastObj> Yeasts, List<miscObj> Miscs, styleObj Style)
         {
             recipe beerNetRecipe = new recipe();
+            beerNetRecipe.isPublic = true;
             beerNetRecipe.recipeParameters = new RecipeParameters();
             beerNetRecipe.fermentables = new List<fermentableAddition>();
             beerNetRecipe.hops = new List<hopAddition>();
             beerNetRecipe.adjuncts = new List<adjunctAddition>();
             beerNetRecipe.yeasts = new List<yeastAddition>();
 
-           // beerNetRecipe.name = XMLRecipe.NAME;
-           // beerNetRecipe.description = "Converted from Beer XML.";
-           // beerNetRecipe.style = Style.NAME;
-           // beerNetRecipe.recipeParameters.ibuCalcType = "basic";
-           // beerNetRecipe.recipeParameters.fermentableCalcType = "basic";
-           // beerNetRecipe.recipeParameters.ibuBoilTimeCurveFit = -0.04;
-           // beerNetRecipe.recipeParameters.intoFermenterVolume = 5;
-           // beerNetRecipe.hops = mapHopAdditions(Hops);
-           // beerNetRecipe.fermentables = mapFermentableAdditions(Fermentables);
-           // beerNetRecipe.yeasts = mapYeastAdditions(Yeasts);
-           // beerNetRecipe.adjuncts = mapAdjuntAdditions(Miscs);
+            beerNetRecipe.name = XMLRecipe.NAME;
+            beerNetRecipe.description = "Converted from Beer XML.";
+          
+            beerNetRecipe.recipeParameters.ibuCalcType = "basic";
+            beerNetRecipe.recipeParameters.fermentableCalcType = "basic";
+            beerNetRecipe.recipeParameters.ibuBoilTimeCurveFit = -0.04;
+           
+            beerNetRecipe.hops = mapHopAdditions(Hops);
+            beerNetRecipe.fermentables = mapFermentableAdditions(Fermentables);
+            beerNetRecipe.yeasts = mapYeastAdditions(Yeasts);
+            beerNetRecipe.adjuncts = mapAdjuntAdditions(Miscs);
+            beerNetRecipe.style = mapStyle(Style);
+            //  beerNetRecipe.style = FUUUUUCKCKKK;  NEEED TO ADD STYLE
+            // beerNetRecipe.recipeParameters.intoFermenterVolume = 5; NEED EQUIPMENT PROFILE
+
             return beerNetRecipe;
+        }
+
+        public style mapStyle (styleObj styleFromXML)
+        {
+            style recipeStyle = new style();
+            recipeStyle.category = styleFromXML.CATEGORY_NUMBER.ToString();
+            recipeStyle.description = styleFromXML.STYLE_GUIDE;
+            recipeStyle.maxABV = styleFromXML.ABV_MAX.Value;
+            recipeStyle.minABV = styleFromXML.ABV_MIN.Value;
+            recipeStyle.maxColor = styleFromXML.COLOR_MAX == null ? 0 : styleFromXML.COLOR_MAX.Value;
+            recipeStyle.minColor = styleFromXML.COLOR_MIN == null ? 0 : styleFromXML.COLOR_MIN.Value;
+            recipeStyle.maxFG = styleFromXML.FG_MAX  == null ? 0 : styleFromXML.FG_MAX.Value;
+            recipeStyle.minFG = styleFromXML.FG_MIN == null ? 0 : styleFromXML.FG_MIN.Value;
+            recipeStyle.maxIBU = styleFromXML.IBU_MAX == null ? 0 : styleFromXML.IBU_MAX.Value;
+            recipeStyle.minIBU = styleFromXML.IBU_MIN == null ? 0 : styleFromXML.IBU_MIN.Value;
+            recipeStyle.name = styleFromXML.NAME;
+            recipeStyle.maxOG = styleFromXML.OG_MAX == null ? 0 : styleFromXML.OG_MAX.Value;
+            recipeStyle.minOG = styleFromXML.OG_MIN == null ? 0 : styleFromXML.OG_MIN.Value;
+
+            //styleFromXML.STYLE_LETTER;
+            //styleFromXML.TYPE;
+            //styleFromXML.VERSION;
+            return recipeStyle;
         }
 
         public List<hopAddition> mapHopAdditions(List<hopObj> Hops)
@@ -187,10 +218,14 @@ namespace BeerNet.BeerXML
             foreach (hopObj h in Hops)
             {
                 hop hp = new hop();
-                hp.aau = h.ALPHA.Value;
+                hp.aau = h.ALPHA == null ? 0 : h.ALPHA.Value;
                 hp.name = h.NAME;
+                hp.beta = h.BETA == null ? 0 : h.BETA.Value;
+                hp.origin = h.ORIGIN;
+                hp.notes = h.NOTES;
 
                 hopAddition addition = new hopAddition();
+                addition.additionGuid = Guid.NewGuid().ToString();
                 addition.time = (float)h.TIME.Value;
                 addition.type = h.USE;
                 addition.amount = (float)Math.Round(h.AMOUNT.Value * KGtoOZ, 2);//Amount is in kilograms
@@ -209,31 +244,48 @@ namespace BeerNet.BeerXML
             {
                 fermentable fm = new fermentable();
                 fm.name = f.NAME;
-                //This might be wrong. http://howtobrew.com/book/section-2/what-is-malted-grain/extraction-and-maximum-yield
-              //  fm.ppg = (float)(1000 * f.POTENTIAL.Value) - 1000;
+                fm.yield = f.YIELD == null ? 0 : f.YIELD.Value;
+                fm.notes = f.NOTES;
+                fm.origin = f.ORIGIN;
+                //fm.   f.POTENTIAL not used
+                //fm.protein = f.PROTEIN.Value;  ?f.PROTEIN is a string... why...
+                // f.RECOMMEND_MASH not used
                 fm.type = f.TYPE;
-                fm.color = (float)f.COLOR.Value;
+                // f.ADD_AFTER_BOIL not used
+                //fm.coarse_fine_diff = f.COARSE_FINE_DIFF;  //ALSO A STRING!!!
+                // fm.diastatic_power = f.DIASTATIC_POWER  also a string
+                //f.IBU_GAL_PER_LB
+                //f.MAX_IN_BATCH not used
+                //fm.moisture = f.MOISTURE  also a string
+                fm.type = f.TYPE;
+                fm.color = f.COLOR == null ? 0 : f.COLOR.Value;
                 fm.maltster = f.ORIGIN;
 
                 fermentableAddition addition = new fermentableAddition();
+                addition.additionGuid = Guid.NewGuid().ToString();
                 addition.fermentable = fm;
                // addition.use = "Mash";
-                addition.weight = (float)(f.AMOUNT * 2.2);//Amount is in kilograms
+                addition.weight = (float)(f.AMOUNT * KGtoLB);//Amount is in kilograms
                 fermentableAdditions.Add(addition);
             }
             return fermentableAdditions;
         }
 
-        public List<yeast> mapYeastAdditions(List<yeastObj> Yeasts)
+        public List<yeastAddition> mapYeastAdditions(List<yeastObj> Yeasts)
         {
-            List<yeast> yeastAdditions = new List<yeast>();
+            List<yeastAddition> yeastAdditions = new List<yeastAddition>();
             foreach (yeastObj y in Yeasts)
             {
+                yeastAddition ya = new yeastAddition();
                 yeast ys = new yeast();
                 ys.attenuation = (float)y.ATTENUATION;
                 ys.lab = y.LABORATORY;
                 ys.name = y.NAME;
-                yeastAdditions.Add(ys);
+                ys.form = y.FORM;
+                ya.yeast = ys;
+                ya.additionGuid = Guid.NewGuid().ToString();
+                // y.TYPE not used
+                yeastAdditions.Add(ya);
             }
             return yeastAdditions;
         }
@@ -244,8 +296,10 @@ namespace BeerNet.BeerXML
             {
                 adjunct aj = new adjunct();
                 aj.name = o.NAME;
+                //o.NOTES;
 
                 adjunctAddition adj = new adjunctAddition();
+                adj.additionGuid = Guid.NewGuid().ToString();
                 adj.adjunct = aj;
                 adj.amount = Math.Round(o.AMOUNT.Value * KGtoOZ, 2);//amount is in kg
                 adj.unit = "oz";//thats what we're converting it to....
@@ -254,6 +308,29 @@ namespace BeerNet.BeerXML
                 adjunctAdditions.Add(adj);
             }
             return adjunctAdditions;
+        }
+
+        public equipmentProfile getDefaultEquipmentProfile()
+        {
+            equipmentProfile e = new equipmentProfile();
+            e.batchSize = (float)5.5;
+            e.boilSize = (float)5.5;
+            e.createdByUserId = "";
+            e.efficiency = (float)75;
+            e.intoFermenterVolume = (float)5.5;
+            e.name = "default";
+            return e;
+        }
+
+        public RecipeStatistics makeEmptyRecipeStats()
+        {
+            RecipeStatistics recipeStats = new RecipeStatistics();
+            recipeStats.abv = 0;
+            recipeStats.fg = 0;
+            recipeStats.ibu = 0;
+            recipeStats.og = 0;
+            recipeStats.srm = 0;
+            return recipeStats;
         }
     }
 }

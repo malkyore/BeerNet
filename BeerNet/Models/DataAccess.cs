@@ -21,10 +21,10 @@ namespace BeerNet.Models
           .SetBasePath(Directory.GetCurrentDirectory())
           .AddJsonFile("appsettings.json");
             _configuration = builder.Build();
-            //mongodb://rest.unacceptable.beer:5283 <- the server IP and stuff
+            //mongodb://rest.unacceptable.beer:5283 <- the server IP and stuff 
             _client = new MongoClient(_configuration.GetValue<string>("MongoLocation"));
             //_client = new MongoClient("mongodb://rest.unacceptable.beser:5283");
-            _db = _client.GetDatabase("BeerNet");
+            _db = _client.GetDatabase(_configuration.GetValue<string>("DatabaseName"));
         }
 
         public IEnumerable<T> GetAll<T>()

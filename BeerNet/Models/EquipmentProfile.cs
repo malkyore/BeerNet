@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BeerNet.Models
 {
+    [BsonIgnoreExtraElements]
     public class equipmentProfile : equipmentProfileBase
     {
         public ObjectId Id { get; set; }
