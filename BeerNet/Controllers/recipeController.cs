@@ -140,20 +140,20 @@ namespace BeerNet.Controllers
             return r;
         }
 
-        [HttpGet("mashInfusion/{id}/{T1}/{T2}/{Wm}/{Tw}")]
+        [HttpPost("mashInfusion/{T1}/{T2}/{Wm}/{Tw}")]
         [Authorize]
-        public Response MashInfusion(string id, double T1, double T2, double Wm, double Tw)
+        public Response MashInfusion([FromBody]recipe recipe, double T1, double T2, double Wm, double Tw)
         {
             Response r = new Response();
             try
             {
                 DataAccess accessor = new DataAccess();
-                recipe value = accessor.Get<recipe>(id);
+                
 
                 double Wa = 0; //Wa = water to add to the mash (the result of the equation
                                //double T1 = 0; //T1 = Initial(Current) temp of mash
                                //double T2 = 0; //T2 = Target temp of mash
-                double G = value.grainsInPounds(); //G = pounds of grains in mash
+                double G = recipe.grainsInPounds(); //G = pounds of grains in mash
                                                    //double Wm = 0; //Wm = total amount of water in mash
                                                    //double Tw = 0; //Tw = temperature of water you're adding to mash
 

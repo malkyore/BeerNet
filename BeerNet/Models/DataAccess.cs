@@ -99,6 +99,11 @@ namespace BeerNet.Models
             return r;
         }
 
+        internal IEnumerable<BrewLog> GetBrewLogsForRecipe(string id)
+        {
+           return _db.GetCollection<BrewLog>(typeof(BrewLog).Name).Find(x => x.recipeIdString == id).ToList();
+        }
+
         public bool PostRecipe(recipe currentRecipe)
         {
             //Maybe one day...
