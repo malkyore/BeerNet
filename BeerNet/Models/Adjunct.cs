@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BeerNet.Models
 {
+    [BsonIgnoreExtraElements]
     public class adjunct : AdjunctBase
     {
         public ObjectId Id { get; set; }
