@@ -49,9 +49,10 @@ namespace BeerNet.Controllers
                     /*
                      * Checks if someone else has modified the recipe.
                      * */
-                    if (!String.IsNullOrEmpty(id))
+                    if (!String.IsNullOrEmpty(id) && !id.Equals("000000000000000000000000"))
                     {
                         recipe existingRecipe = accessor.Get<recipe>(id);
+                        //TODO: id is coming in as all 0's and then existing recipe becomes null, then this throws an exception
                         if (existingRecipe.lastModifiedGuid != value.lastModifiedGuid)
                         {
                             throw new Exception("Recipe has been modified.  Please refresh");
