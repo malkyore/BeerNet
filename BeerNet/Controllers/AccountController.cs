@@ -120,6 +120,13 @@ namespace BeerNet.Controllers
                 accessor.Post(generateDefaultUserSettings());
                 return Json(GenerateJwtToken(model.Username, user));
             }
+            else
+            {
+                if(result.Errors.Count() > 0)
+                {
+                    return Json(result.Errors);
+                }
+            }
       
             throw new ApplicationException("UNKNOWN_ERROR");
         }
